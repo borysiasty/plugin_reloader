@@ -18,9 +18,9 @@ version=0.6.1
 # Optional items:
 
 # changelog=
-#homepage=
-#tracker=
-#repository=
+homepage=http://hub.qgis.org/projects/shpencodingfixer
+tracker=http://hub.qgis.org/projects/shpencodingfixer/isuues
+repository=http://github.com/borysiasty/plugin_reloader
 
 # tags are comma separated with spaces allowed
 tags=reloader, reload, python, development, developer

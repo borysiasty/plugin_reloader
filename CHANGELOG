@@ -1,5 +1,5 @@
 0.6.1
-Tell QGIS it's compatible with SIP API v2 :)
+Also tell QGIS about the compatibility with QGIS 2 :)
 
 0.6
 Compatible with SIP API v2 (thanks to Etienne Tourigny)
