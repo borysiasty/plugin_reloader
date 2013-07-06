@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/plugins/plugin_reloader">
+        <file>reload.png</file>
+        <file>reload-conf.png</file>
+    </qresource>
+</RCC>

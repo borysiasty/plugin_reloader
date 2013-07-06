@@ -1,0 +1,37 @@
+# This file contains metadata for your plugin. Beginning
+# with version 1.8 this is the preferred way to supply information about a
+# plugin. The current method of embedding metadata in __init__.py will
+# be supported until version 2.0
+
+# This file should be included when you package your plugin.
+
+# Mandatory items:
+
+
+[general]
+name=Plugin Reloader
+qgisMinimumVersion=1.5
+qgisMaximumVersion=2.99
+description=Reloads a chosen plugin in one click (only useful for Python Plugin Developers)
+version=0.6.1
+
+# Optional items:
+
+# changelog=
+#homepage=
+#tracker=
+#repository=
+
+# tags are comma separated with spaces allowed
+tags=reloader, reload, python, development, developer
+
+icon=reload.png
+
+experimental=True
+
+# deprecated flag (applies to the whole plugin, not just a single version
+deprecated=False
+
+# Author contact information
+author=Borys Jurgiel
+email=qgis@borysjurgiel.pl
