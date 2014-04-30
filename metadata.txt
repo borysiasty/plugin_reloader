@@ -13,13 +13,13 @@ name=Plugin Reloader
 qgisMinimumVersion=1.5
 qgisMaximumVersion=2.99
 description=Reloads a chosen plugin in one click (only useful for Python Plugin Developers)
-version=0.6.1
+version=0.6.2
 
 # Optional items:
 
 # changelog=
-homepage=http://hub.qgis.org/projects/shpencodingfixer
-tracker=http://hub.qgis.org/projects/shpencodingfixer/isuues
+homepage=http://hub.qgis.org/projects/pluginreloader
+tracker=http://hub.qgis.org/projects/pluginreloader/issues
 repository=http://github.com/borysiasty/plugin_reloader
 
 # tags are comma separated with spaces allowed
