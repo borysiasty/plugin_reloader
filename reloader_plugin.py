@@ -67,10 +67,19 @@ class ConfigureReloaderDialog (QDialog, Ui_ConfigureReloaderDialogBase):
 class ReloaderPlugin():
   def __init__(self, iface):
     self.iface = iface
-
+    self.toolBar = self.iface.addToolBar(u"PluginReloader")
+    self.toolBar.setObjectName(u"PluginReloader")
+    self.toolButton = QToolButton()
+    self.toolButton.setMenu(QMenu())
+    self.toolButton.setPopupMode(QToolButton.MenuButtonPopup)
+    self.iface.addToolBarWidget(self.toolButton)
 
   def initGui(self):
-    self.actionRun = QAction(QIcon(":/plugins/plugin_reloader/reload.png"), u"Reload chosen plugin", self.iface.mainWindow())
+    self.actionRun = QAction(
+      QIcon(":/plugins/plugin_reloader/reload.png"), 
+      u"Reload chosen plugin", 
+      self.iface.mainWindow()
+    )
     self.iface.registerMainWindowAction(self.actionRun, "F5")
     self.actionRun.setWhatsThis(u"Reload chosen plugin")
     plugin = currentPlugin()
@@ -78,12 +87,18 @@ class ReloaderPlugin():
       self.actionRun.setWhatsThis(u"Reload plugin: %s" % plugin)
       self.actionRun.setText(u"Reload plugin: %s" % plugin)
     self.iface.addPluginToMenu("&Plugin Reloader", self.actionRun)
-    self.iface.addToolBarIcon(self.actionRun)
+    m = self.toolButton.menu()
+    m.addAction(self.actionRun)
+    self.toolButton.setDefaultAction(self.actionRun)
     QObject.connect(self.actionRun, SIGNAL("triggered()"), self.run)
-    self.actionConfigure = QAction(QIcon(":/plugins/plugin_reloader/reload-conf.png"), u"Choose a plugin to be reloaded", self.iface.mainWindow())
+    self.actionConfigure = QAction(
+      QIcon(":/plugins/plugin_reloader/reload-conf.png"), 
+      u"Choose a plugin to be reloaded", 
+      self.iface.mainWindow()
+    )
     self.iface.registerMainWindowAction(self.actionConfigure, "Shift+F5")
     self.actionConfigure.setWhatsThis(u"Choose a plugin to be reloaded")
-    self.iface.addToolBarIcon(self.actionConfigure)
+    m.addAction(self.actionConfigure)
     self.iface.addPluginToMenu("&Plugin Reloader", self.actionConfigure)
     QObject.connect(self.actionConfigure, SIGNAL("triggered()"), self.configure)
 
