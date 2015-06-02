@@ -19,7 +19,7 @@ def name():
   return "Plugin reloader"
 
 def version():
-  return "Version 0.6.1"
+  return "Version 0.6.3"
 
 def description():
   return "Reloads a chosen plugin in one click (only useful for Python Plugin Developers)"
