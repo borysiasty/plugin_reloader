@@ -67,8 +67,6 @@ class ConfigureReloaderDialog (QDialog, Ui_ConfigureReloaderDialogBase):
 class ReloaderPlugin():
   def __init__(self, iface):
     self.iface = iface
-    self.toolBar = self.iface.addToolBar(u"PluginReloader")
-    self.toolBar.setObjectName(u"PluginReloader")
     self.toolButton = QToolButton()
     self.toolButton.setMenu(QMenu())
     self.toolButton.setPopupMode(QToolButton.MenuButtonPopup)
