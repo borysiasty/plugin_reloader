@@ -15,31 +15,6 @@
 # *                                                                         *
 # ***************************************************************************
 
-def name():
-  return "Plugin reloader"
-
-def version():
-  return "Version 0.6.3"
-
-def description():
-  return "Reloads a chosen plugin in one click (only useful for Python Plugin Developers)"
-
-def qgisMinimumVersion():
-  return "1.5"
-
-def experimental():
-  return True
-
-def author():
-  return "Borys Jurgiel"
-
-def authorName():
-  return author()
-
-def email():
-  return "qgis at borysjurgiel dot pl"
-
-
 def classFactory(iface):
-  from reloader_plugin import ReloaderPlugin
+  from .reloader_plugin import ReloaderPlugin
   return ReloaderPlugin(iface)

@@ -15,26 +15,17 @@
 # *                                                                         *
 # ***************************************************************************
 
-from PyQt4.QtCore import *
-from PyQt4.QtGui import *
-from qgis.core import QGis
+from qgis.PyQt.QtCore import *
+from qgis.PyQt.QtGui import *
+from qgis.PyQt.QtWidgets import *
 from qgis.utils import plugins, reloadPlugin, updateAvailablePlugins, loadPlugin, startPlugin
-from configurereloaderbase import Ui_ConfigureReloaderDialogBase
-import resources_rc
-
-
-if QGis.QGIS_VERSION_INT >= 10900:
-    SIPv2 = True
-else:
-    SIPv2 = False
+from .configurereloaderbase import Ui_ConfigureReloaderDialogBase
+from .resources_rc import *
 
 
 def currentPlugin():
     settings = QSettings()
-    if SIPv2:
-      return unicode(settings.value('/PluginReloader/plugin', '', type=str))
-    else:
-      return unicode(settings.value('/PluginReloader/plugin', QVariant('')).toString())
+    return unicode(settings.value('/PluginReloader/plugin', '', type=str))
 
 
 class ConfigureReloaderDialog (QDialog, Ui_ConfigureReloaderDialogBase):
@@ -42,13 +33,11 @@ class ConfigureReloaderDialog (QDialog, Ui_ConfigureReloaderDialogBase):
     QDialog.__init__(self)
     self.iface = parent
     self.setupUi(self)
-    self.plugins = plugins.keys()
-    self.plugins.sort()
     #update the plugin list first! The plugin could be removed from the list if was temporarily broken.
     #Still doesn't work in every case. TODO?: try to load from scratch the plugin saved in QSettings if doesn't exist
     plugin = currentPlugin()
     updateAvailablePlugins()
-    #if not plugins.has_key(plugin):
+    #if plugin not in plugins:
       #try:
         #loadPlugin(plugin)
         #startPlugin(plugin)
@@ -56,12 +45,12 @@ class ConfigureReloaderDialog (QDialog, Ui_ConfigureReloaderDialogBase):
         #pass
     #updateAvailablePlugins()
 
-    for plugin in self.plugins:
+    plugins_list = sorted(plugins.keys())
+    for plugin in plugins_list:
       self.comboPlugin.addItem(plugin)
     plugin = currentPlugin()
-    if plugins.has_key(plugin):
-      self.comboPlugin.setCurrentIndex(self.plugins.index(plugin))
-
+    if plugin in plugins:
+      self.comboPlugin.setCurrentIndex(plugins_list.index(plugin))
 
 
 class ReloaderPlugin():
@@ -88,7 +77,7 @@ class ReloaderPlugin():
     m = self.toolButton.menu()
     m.addAction(self.actionRun)
     self.toolButton.setDefaultAction(self.actionRun)
-    QObject.connect(self.actionRun, SIGNAL("triggered()"), self.run)
+    self.actionRun.triggered.connect(self.run)
     self.actionConfigure = QAction(
       QIcon(":/plugins/plugin_reloader/reload-conf.png"), 
       u"Choose a plugin to be reloaded", 
@@ -98,8 +87,7 @@ class ReloaderPlugin():
     self.actionConfigure.setWhatsThis(u"Choose a plugin to be reloaded")
     m.addAction(self.actionConfigure)
     self.iface.addPluginToMenu("&Plugin Reloader", self.actionConfigure)
-    QObject.connect(self.actionConfigure, SIGNAL("triggered()"), self.configure)
-
+    self.actionConfigure.triggered.connect(self.configure)
 
   def unload(self):
     self.iface.removePluginMenu("&Plugin Reloader",self.actionRun)
@@ -109,13 +97,12 @@ class ReloaderPlugin():
     self.iface.unregisterMainWindowAction(self.actionRun)
     self.iface.unregisterMainWindowAction(self.actionConfigure)
 
-
   def run(self):
     plugin = currentPlugin()
     #update the plugin list first! The plugin could be removed from the list if was temporarily broken.
     updateAvailablePlugins()
     #try to load from scratch the plugin saved in QSettings if not loaded
-    if not plugins.has_key(plugin):
+    if plugin not in plugins:
       try:
         loadPlugin(plugin)
         startPlugin(plugin)
@@ -123,10 +110,10 @@ class ReloaderPlugin():
         pass
     updateAvailablePlugins()
     #give one chance for correct (not a loop)
-    if not plugins.has_key(plugin):
+    if plugin not in plugins:
       self.configure()
       plugin = currentPlugin()
-    if plugins.has_key(plugin):
+    if plugin in plugins:
       reloadPlugin(plugin)
 
 
@@ -136,10 +123,6 @@ class ReloaderPlugin():
     if dlg.result():
       plugin = dlg.comboPlugin.currentText()
       settings = QSettings()
-      if SIPv2:
-        settings.setValue('/PluginReloader/plugin', plugin)
-      else:
-        settings.setValue('/PluginReloader/plugin', QVariant(plugin))
       self.actionRun.setWhatsThis(u"Reload plugin: %s" % plugin)
       self.actionRun.setText(u"Reload plugin: %s" % plugin)
     # call the reloading immediately - note that it may cause a loop!!
