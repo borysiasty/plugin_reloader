@@ -19,9 +19,9 @@ version=0.7
 # Optional items:
 
 # changelog=
-homepage=http://hub.qgis.org/projects/pluginreloader
-tracker=http://hub.qgis.org/projects/pluginreloader/issues
-repository=http://github.com/borysiasty/plugin_reloader
+homepage=https://github.com/borysiasty/plugin_reloader
+tracker=https://github.com/borysiasty/plugin_reloader/issues
+repository=https://github.com/borysiasty/plugin_reloader
 
 # tags are comma separated with spaces allowed
 tags=reloader, reload, python, development, developer
