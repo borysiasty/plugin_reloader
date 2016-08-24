@@ -15,13 +15,14 @@
 # *                                                                         *
 # ***************************************************************************
 
+import os
 from qgis.PyQt.QtCore import *
 from qgis.PyQt.QtGui import *
 from qgis.PyQt.QtWidgets import *
+from qgis.PyQt import uic
 from qgis.utils import plugins, reloadPlugin, updateAvailablePlugins, loadPlugin, startPlugin
-from .configurereloaderbase import Ui_ConfigureReloaderDialogBase
-from .resources_rc import *
 
+Ui_ConfigureReloaderDialogBase = uic.loadUiType(os.path.join(os.path.dirname(__file__), 'configurereloaderbase.ui'))[0]
 
 def currentPlugin():
     settings = QSettings()
@@ -63,8 +64,8 @@ class ReloaderPlugin():
 
   def initGui(self):
     self.actionRun = QAction(
-      QIcon(":/plugins/plugin_reloader/reload.png"), 
-      u"Reload chosen plugin", 
+      QIcon(os.path.join(os.path.dirname(__file__), "reload.png")),
+      u"Reload chosen plugin",
       self.iface.mainWindow()
     )
     self.iface.registerMainWindowAction(self.actionRun, "F5")
@@ -79,8 +80,8 @@ class ReloaderPlugin():
     self.toolButton.setDefaultAction(self.actionRun)
     self.actionRun.triggered.connect(self.run)
     self.actionConfigure = QAction(
-      QIcon(":/plugins/plugin_reloader/reload-conf.png"), 
-      u"Choose a plugin to be reloaded", 
+      QIcon(os.path.join(os.path.dirname(__file__), "reload-conf.png")),
+      u"Choose a plugin to be reloaded",
       self.iface.mainWindow()
     )
     self.iface.registerMainWindowAction(self.actionConfigure, "Shift+F5")
@@ -125,5 +126,4 @@ class ReloaderPlugin():
       settings = QSettings()
       self.actionRun.setWhatsThis(u"Reload plugin: %s" % plugin)
       self.actionRun.setText(u"Reload plugin: %s" % plugin)
-    # call the reloading immediately - note that it may cause a loop!!
-    #self.run()
+      settings.setValue('/PluginReloader/plugin', plugin)

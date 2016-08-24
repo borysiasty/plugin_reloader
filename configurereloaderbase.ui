@@ -23,10 +23,6 @@
   <property name="windowTitle">
    <string>Configure Plugin reloader</string>
   </property>
-  <property name="windowIcon">
-   <iconset resource="resources.qrc">
-    <normaloff>:/plugins/plugin_reloader/reload-conf.png</normaloff>:/plugins/plugin_reloader/reload-conf.png</iconset>
-  </property>
   <property name="whatsThis">
    <string/>
   </property>
@@ -125,9 +121,6 @@
    </item>
   </layout>
  </widget>
- <resources>
-  <include location="resources.qrc"/>
- </resources>
  <connections>
   <connection>
    <sender>buttonBox</sender>
