@@ -1,5 +1,6 @@
 0.7
 Python3 and PyQt5 compatible. Path by Denis Rouzaud.
+Version for QGIS 2.99 only
 
 0.6.3
 Both actions grouped into a single toolbutton with a menu. Path by Ricardo Garcia Silva.
