@@ -127,7 +127,9 @@ class ReloaderPlugin():
       self.configure()
       plugin = currentPlugin()
     if plugins.has_key(plugin):
+      state = self.iface.mainWindow().saveState()
       reloadPlugin(plugin)
+      self.iface.mainWindow().restoreState(state)
 
 
   def configure(self):
