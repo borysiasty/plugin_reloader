@@ -1,9 +1,15 @@
+0.7.2
+Restore QGIS UI state after reloading (backport changes from 0.6.4). Path by GeorchW.
+
 0.7.1
 Set compatibility to QGIS version range 2.99 - 3.99
 
 0.7
 Python3 and PyQt5 compatible. Path by Denis Rouzaud.
 Version for QGIS 2.99 only
+
+0.6.4
+Restore QGIS UI state after reloading. Path by GeorchW.
 
 0.6.3
 Both actions grouped into a single toolbutton with a menu. Path by Ricardo Garcia Silva.

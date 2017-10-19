@@ -4,7 +4,7 @@
 # ---------------------
 #     begin                : 2010-01-24
 #     copyright            : (C) 2010 by Borys Jurgiel
-#     email                : info at borysjurgiel dot pl
+#     email                : qgis at borysjurgiel dot pl
 #     The "Reload" icon copyright by Matt Ball http://www.mattballdesign.com
 # ***************************************************************************
 # *                                                                         *
