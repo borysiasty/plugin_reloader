@@ -60,7 +60,7 @@ class ReloaderPlugin():
     self.toolButton = QToolButton()
     self.toolButton.setMenu(QMenu())
     self.toolButton.setPopupMode(QToolButton.MenuButtonPopup)
-    self.iface.addToolBarWidget(self.toolButton)
+    self.toolBtnAction = self.iface.addToolBarWidget(self.toolButton)
 
   def initGui(self):
     self.actionRun = QAction(
@@ -97,6 +97,7 @@ class ReloaderPlugin():
     self.iface.removeToolBarIcon(self.actionConfigure)
     self.iface.unregisterMainWindowAction(self.actionRun)
     self.iface.unregisterMainWindowAction(self.actionConfigure)
+    self.iface.removeToolBarIcon(self.toolBtnAction)
 
   def run(self):
     plugin = currentPlugin()
