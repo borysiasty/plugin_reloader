@@ -4,7 +4,7 @@
 # ---------------------
 #     begin                : 2010-01-24
 #     copyright            : (C) 2010 by Borys Jurgiel
-#     email                : info at borysjurgiel dot pl
+#     email                : qgis at borysjurgiel dot pl
 #     The "Reload" icon copyright by Matt Ball http://www.mattballdesign.com
 # ***************************************************************************
 # *                                                                         *
@@ -19,7 +19,7 @@ def name():
   return "Plugin reloader"
 
 def version():
-  return "Version 0.6.3"
+  return "Version 0.6.4"
 
 def description():
   return "Reloads a chosen plugin in one click (only useful for Python Plugin Developers)"

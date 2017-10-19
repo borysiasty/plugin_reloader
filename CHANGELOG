@@ -1,3 +1,6 @@
+0.6.4
+Restore QGIS UI state after reloading (path by GeorchW)
+
 0.6.3
 Grouped both actions into a single toolbutton with a menu (thanks to Ricardo Garcia Silva)
 
