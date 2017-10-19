@@ -1,5 +1,7 @@
 0.7.2
 Restore QGIS UI state after reloading (backport changes from 0.6.4). Path by GeorchW.
+Push a message to the main QgsMessageBar after reloading.
+Fixed tool button removing when unloading the plugin reloader itself.
 
 0.7.1
 Set compatibility to QGIS version range 2.99 - 3.99
