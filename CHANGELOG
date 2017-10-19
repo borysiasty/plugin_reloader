@@ -1,5 +1,6 @@
 0.6.4
-Restore QGIS UI state after reloading (path by GeorchW)
+Restore QGIS UI state after reloading (path by GeorchW).
+This version requires QGIS from 1.8 up to 2.98
 
 0.6.3
 Grouped both actions into a single toolbutton with a menu (thanks to Ricardo Garcia Silva)

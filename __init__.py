@@ -25,7 +25,7 @@ def description():
   return "Reloads a chosen plugin in one click (only useful for Python Plugin Developers)"
 
 def qgisMinimumVersion():
-  return "1.5"
+  return "1.8"
 
 def experimental():
   return True
