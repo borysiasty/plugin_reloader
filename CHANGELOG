@@ -12,9 +12,11 @@ Version for QGIS 2.99 only
 
 0.6.4
 Restore QGIS UI state after reloading. Path by GeorchW.
+Version for QGIS 1.8 up to 2.98
 
 0.6.3
 Both actions grouped into a single toolbutton with a menu. Path by Ricardo Garcia Silva.
+Last version compatible with QGIS < 1.8
 
 0.6.2
 Metadata fix
