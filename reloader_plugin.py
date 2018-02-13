@@ -20,7 +20,7 @@ from qgis.PyQt.QtCore import *
 from qgis.PyQt.QtGui import *
 from qgis.PyQt.QtWidgets import *
 from qgis.PyQt import uic
-from qgis.gui import QgsMessageBar
+from qgis.core import Qgis as QGis
 from qgis.utils import plugins, reloadPlugin, updateAvailablePlugins, loadPlugin, startPlugin
 
 Ui_ConfigureReloaderDialogBase = uic.loadUiType(os.path.join(os.path.dirname(__file__), 'configurereloaderbase.ui'))[0]
@@ -120,7 +120,7 @@ class ReloaderPlugin():
       state = self.iface.mainWindow().saveState()
       reloadPlugin(plugin)
       self.iface.mainWindow().restoreState(state)
-      self.iface.messageBar().pushMessage("<b>%s</b> reloaded." % plugin, QgsMessageBar.INFO)
+      self.iface.messageBar().pushMessage("<b>%s</b> reloaded." % plugin, QGis.Info)
 
   def configure(self):
     dlg = ConfigureReloaderDialog(self.iface)
