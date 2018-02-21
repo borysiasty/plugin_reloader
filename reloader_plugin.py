@@ -82,7 +82,7 @@ class ReloaderPlugin():
     self.actionRun.triggered.connect(self.run)
     self.actionConfigure = QAction(
       QIcon(os.path.join(os.path.dirname(__file__), "reload-conf.png")),
-      u"Choose a plugin to be reloaded",
+      u"Configure",
       self.iface.mainWindow()
     )
     self.iface.registerMainWindowAction(self.actionConfigure, "Shift+F5")
