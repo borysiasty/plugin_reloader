@@ -1,3 +1,7 @@
+0.7.3
+Update to recent API changes. Thanks to Francisco Raga, olivierh65 and Heikki Vesanto.
+Improve GUI strings
+
 0.7.2
 Restore QGIS UI state after reloading (backport changes from 0.6.4). Path by GeorchW.
 Push a message to the main QgsMessageBar after reloading.
