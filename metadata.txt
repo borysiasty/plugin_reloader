@@ -14,7 +14,7 @@ qgisMinimumVersion=1.8
 qgisMaximumVersion=2.98
 description=Reloads a chosen plugin in one click
 about=This tool is only useful for Python Plugin Developers!
-version=0.6.4
+version=0.6.5
 
 # Optional items:
 

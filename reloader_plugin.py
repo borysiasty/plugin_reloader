@@ -72,19 +72,60 @@ class ReloaderPlugin():
     self.toolButton.setPopupMode(QToolButton.MenuButtonPopup)
     self.iface.addToolBarWidget(self.toolButton)
 
+
+  def theBestShortcutForPluginReload(self):
+    ''' Try to find the best saved setting.
+        Note **the action name is variable**, so the "Keyboard Shortcuts" window
+        tends to save concurrent shortcuts:
+              .../shortcuts/Reload plugin: plugin Foo=F5
+              .../shortcuts/Reload plugin: plugin Bar=Ctrl+F5
+              .../shortcuts/Reload plugin: plugin HelloWorld=Ctrl+Alt+Del
+        so we should find the recent one (not always possible) and remove the rest.
+    '''
+    DEFAULT = "Ctrl+F5"
+    settings = QSettings()
+    settings.beginGroup('shortcuts')
+    # Find all saved shortcuts:
+    keys = [key for key in settings.childKeys() if key.startswith('Reload plugin: ')]
+    if settings.contains('Reload chosen plugin'):
+        keys.append('Reload chosen plugin')
+    if not len(keys):
+        # Nothing found in settings - fallback to default:
+        key = None
+        shortcut = DEFAULT
+    elif len(keys) == 1:
+        # Just one setting found, take that!
+        shortcut = settings.value(keys[0])
+    else:
+        # More then one old setting found. Take the best one and remove the rest.
+        if self.actionRun.text() in keys:
+            # The current action text found - let's hope it's the recent one...
+            key = self.actionRun.text()
+            shortcut = settings.value(key)
+        else:
+            # Otherwise take the first one
+            key = keys[0]
+            shortcut = settings.value(key)
+        # Remove redundant settings
+        for i in keys:
+            if i != key:
+                settings.remove(i)
+    return shortcut
+
+
   def initGui(self):
     self.actionRun = QAction(
       QIcon(":/plugins/plugin_reloader/reload.png"), 
       u"Reload chosen plugin", 
       self.iface.mainWindow()
     )
-    self.iface.registerMainWindowAction(self.actionRun, "F5")
     self.actionRun.setWhatsThis(u"Reload chosen plugin")
     plugin = currentPlugin()
     if plugin:
       self.actionRun.setWhatsThis(u"Reload plugin: %s" % plugin)
       self.actionRun.setText(u"Reload plugin: %s" % plugin)
     self.iface.addPluginToMenu("&Plugin Reloader", self.actionRun)
+    self.iface.registerMainWindowAction(self.actionRun, self.theBestShortcutForPluginReload())
     m = self.toolButton.menu()
     m.addAction(self.actionRun)
     self.toolButton.setDefaultAction(self.actionRun)
