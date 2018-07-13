@@ -1,3 +1,6 @@
+0.7.4
+Set the keyboard shortcut to Ctrl+F5 by default and make it properly configurable
+
 0.7.3
 Update to recent API changes. Thanks to Francisco Raga, olivierh65 and Heikki Vesanto.
 Improve GUI strings.
