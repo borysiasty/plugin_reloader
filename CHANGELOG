@@ -1,3 +1,6 @@
+0.7.5
+Fix reloading plugin submodules.
+
 0.7.4
 Set the keyboard shortcut to Ctrl+F5 by default and make it properly configurable
 

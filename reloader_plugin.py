@@ -16,6 +16,7 @@
 # ***************************************************************************
 
 import os
+import sys
 from qgis.PyQt.QtCore import *
 from qgis.PyQt.QtGui import *
 from qgis.PyQt.QtWidgets import *
@@ -157,6 +158,14 @@ class ReloaderPlugin():
       plugin = currentPlugin()
     if plugin in plugins:
       state = self.iface.mainWindow().saveState()
+
+      # Unload submodules
+      for key in [key for key in sys.modules.keys()]:
+        if '%s.' % plugin in key:
+          if hasattr(sys.modules[key], 'qCleanupResources'):
+            sys.modules[key].qCleanupResources()
+          del sys.modules[key]
+
       reloadPlugin(plugin)
       self.iface.mainWindow().restoreState(state)
       self.iface.messageBar().pushMessage("<b>%s</b> reloaded." % plugin, QGis.Info)
