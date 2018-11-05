@@ -1,3 +1,6 @@
+0.7.6
+Fix outdated action tooltip on changing plugin setting. Patch by Nyall Dawson. 
+
 0.7.5
 Fix reloading plugin submodules.
 
