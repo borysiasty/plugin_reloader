@@ -109,10 +109,10 @@ class ReloaderPlugin():
       "Reload chosen plugin",
       self.iface.mainWindow()
     )
-    self.actionRun.setWhatsThis("Reload chosen plugin")
+    self.actionRun.setToolTip("Reload chosen plugin")
     plugin = currentPlugin()
     if plugin:
-      self.actionRun.setWhatsThis("Reload plugin: {}".format(plugin))
+      self.actionRun.setToolTip("Reload plugin: {}".format(plugin))
       self.actionRun.setText("Reload plugin: {}".format(plugin))
     self.iface.addPluginToMenu("&Plugin Reloader", self.actionRun)
     self.iface.registerMainWindowAction(self.actionRun, self.theBestShortcutForPluginReload())
@@ -126,7 +126,7 @@ class ReloaderPlugin():
       self.iface.mainWindow()
     )
     self.iface.registerMainWindowAction(self.actionConfigure, "Shift+F5")
-    self.actionConfigure.setWhatsThis("Choose a plugin to be reloaded")
+    self.actionConfigure.setToolTip("Choose a plugin to be reloaded")
     m.addAction(self.actionConfigure)
     self.iface.addPluginToMenu("&Plugin Reloader", self.actionConfigure)
     self.actionConfigure.triggered.connect(self.configure)
@@ -176,6 +176,6 @@ class ReloaderPlugin():
     if dlg.result():
       plugin = dlg.comboPlugin.currentText()
       settings = QSettings()
-      self.actionRun.setWhatsThis("Reload plugin: {}".format(plugin))
+      self.actionRun.setToolTip("Reload plugin: {}".format(plugin))
       self.actionRun.setText("Reload plugin: {}".format(plugin))
       settings.setValue('/PluginReloader/plugin', plugin)
