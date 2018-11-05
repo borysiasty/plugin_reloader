@@ -33,7 +33,7 @@ def currentPlugin():
 
 class ConfigureReloaderDialog (QDialog, Ui_ConfigureReloaderDialogBase):
   def __init__(self, parent):
-    QDialog.__init__(self)
+    super().__init__()
     self.iface = parent
     self.setupUi(self)
     #update the plugin list first! The plugin could be removed from the list if was temporarily broken.
@@ -106,14 +106,14 @@ class ReloaderPlugin():
   def initGui(self):
     self.actionRun = QAction(
       QIcon(os.path.join(os.path.dirname(__file__), "reload.png")),
-      u"Reload chosen plugin",
+      "Reload chosen plugin",
       self.iface.mainWindow()
     )
-    self.actionRun.setWhatsThis(u"Reload chosen plugin")
+    self.actionRun.setToolTip("Reload chosen plugin")
     plugin = currentPlugin()
     if plugin:
-      self.actionRun.setWhatsThis(u"Reload plugin: %s" % plugin)
-      self.actionRun.setText(u"Reload plugin: %s" % plugin)
+      self.actionRun.setToolTip("Reload plugin: {}".format(plugin))
+      self.actionRun.setText("Reload plugin: {}".format(plugin))
     self.iface.addPluginToMenu("&Plugin Reloader", self.actionRun)
     self.iface.registerMainWindowAction(self.actionRun, self.theBestShortcutForPluginReload())
     m = self.toolButton.menu()
@@ -122,11 +122,11 @@ class ReloaderPlugin():
     self.actionRun.triggered.connect(self.run)
     self.actionConfigure = QAction(
       QIcon(os.path.join(os.path.dirname(__file__), "reload-conf.png")),
-      u"Configure",
+      "Configure",
       self.iface.mainWindow()
     )
     self.iface.registerMainWindowAction(self.actionConfigure, "Shift+F5")
-    self.actionConfigure.setWhatsThis(u"Choose a plugin to be reloaded")
+    self.actionConfigure.setToolTip("Choose a plugin to be reloaded")
     m.addAction(self.actionConfigure)
     self.iface.addPluginToMenu("&Plugin Reloader", self.actionConfigure)
     self.actionConfigure.triggered.connect(self.configure)
@@ -161,14 +161,14 @@ class ReloaderPlugin():
 
       # Unload submodules
       for key in [key for key in sys.modules.keys()]:
-        if '%s.' % plugin in key:
+        if '{}.'.format(plugin) in key:
           if hasattr(sys.modules[key], 'qCleanupResources'):
             sys.modules[key].qCleanupResources()
           del sys.modules[key]
 
       reloadPlugin(plugin)
       self.iface.mainWindow().restoreState(state)
-      self.iface.messageBar().pushMessage("<b>%s</b> reloaded." % plugin, QGis.Info)
+      self.iface.messageBar().pushMessage("<b>{}</b> reloaded.".format(plugin), QGis.Info)
 
   def configure(self):
     dlg = ConfigureReloaderDialog(self.iface)
@@ -176,6 +176,6 @@ class ReloaderPlugin():
     if dlg.result():
       plugin = dlg.comboPlugin.currentText()
       settings = QSettings()
-      self.actionRun.setWhatsThis(u"Reload plugin: %s" % plugin)
-      self.actionRun.setText(u"Reload plugin: %s" % plugin)
+      self.actionRun.setToolTip("Reload plugin: {}".format(plugin))
+      self.actionRun.setText("Reload plugin: {}".format(plugin))
       settings.setValue('/PluginReloader/plugin', plugin)
