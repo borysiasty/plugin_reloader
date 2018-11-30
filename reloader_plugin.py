@@ -23,6 +23,7 @@ from qgis.PyQt.QtWidgets import *
 from qgis.PyQt import uic
 from qgis.core import Qgis as QGis
 from qgis.utils import plugins, reloadPlugin, updateAvailablePlugins, loadPlugin, startPlugin
+from pyplugin_installer import installer as plugin_installer
 
 Ui_ConfigureReloaderDialogBase = uic.loadUiType(os.path.join(os.path.dirname(__file__), 'configurereloaderbase.ui'))[0]
 
@@ -50,7 +51,11 @@ class ConfigureReloaderDialog (QDialog, Ui_ConfigureReloaderDialogBase):
 
     plugins_list = sorted(plugins.keys())
     for plugin in plugins_list:
-      self.comboPlugin.addItem(plugin)
+      try:
+        icon = QIcon(plugin_installer.plugins.all()[plugin]['icon'])
+      except KeyError:
+        icon = QIcon()
+      self.comboPlugin.addItem(icon, plugin)
     plugin = currentPlugin()
     if plugin in plugins:
       self.comboPlugin.setCurrentIndex(plugins_list.index(plugin))
