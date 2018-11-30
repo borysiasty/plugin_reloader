@@ -1,3 +1,6 @@
+0.7.7
+Show icons in plugin selection combo box. Patch by Nyall Dawson.
+
 0.7.6
 Fix outdated action tooltip on changing plugin setting. Patch by Nyall Dawson. 
 
