@@ -21,7 +21,7 @@ from qgis.PyQt.QtCore import *
 from qgis.PyQt.QtGui import *
 from qgis.PyQt.QtWidgets import *
 from qgis.PyQt import uic
-from qgis.core import Qgis as QGis
+from qgis.core import Qgis
 from qgis.utils import plugins, reloadPlugin, updateAvailablePlugins, loadPlugin, startPlugin
 from pyplugin_installer import installer as plugin_installer
 
@@ -31,12 +31,31 @@ def currentPlugin():
     settings = QSettings()
     return unicode(settings.value('/PluginReloader/plugin', '', type=str))
 
+def setCurrentPlugin(plugin):
+    ''' param plugin (str): plugin dir (module name)
+    '''
+    settings = QSettings()
+    settings.setValue('/PluginReloader/plugin', plugin)
+
+def notificationsEnabled():
+    settings = QSettings()
+    return settings.value('/PluginReloader/notify', True, type=bool)
+
+def setNotificationsEnabled(enabled):
+    ''' param enabled (bool): Yes or no I'm asking?
+    '''
+    settings = QSettings()
+    return settings.setValue('/PluginReloader/notify', enabled)
+
+
 
 class ConfigureReloaderDialog (QDialog, Ui_ConfigureReloaderDialogBase):
   def __init__(self, parent):
     super().__init__()
     self.iface = parent
     self.setupUi(self)
+    self.cbNotifications.setChecked(notificationsEnabled())
+
     #update the plugin list first! The plugin could be removed from the list if was temporarily broken.
     #Still doesn't work in every case. TODO?: try to load from scratch the plugin saved in QSettings if doesn't exist
     plugin = currentPlugin()
@@ -173,7 +192,8 @@ class ReloaderPlugin():
 
       reloadPlugin(plugin)
       self.iface.mainWindow().restoreState(state)
-      self.iface.messageBar().pushMessage("<b>{}</b> reloaded.".format(plugin), QGis.Info)
+      if notificationsEnabled():
+        self.iface.messageBar().pushMessage("<b>{}</b> reloaded.".format(plugin), Qgis.Info)
 
   def configure(self):
     dlg = ConfigureReloaderDialog(self.iface)
@@ -183,4 +203,5 @@ class ReloaderPlugin():
       settings = QSettings()
       self.actionRun.setToolTip("Reload plugin: {}".format(plugin))
       self.actionRun.setText("Reload plugin: {}".format(plugin))
-      settings.setValue('/PluginReloader/plugin', plugin)
+      setCurrentPlugin(plugin)
+      setNotificationsEnabled(dlg.cbNotifications.isChecked())
