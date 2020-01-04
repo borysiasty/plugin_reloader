@@ -1,5 +1,6 @@
 0.7.8
-Make the notification optional in case you hate trivial notifications covering error messages fom the plugin.
+Make the notification optional in case you hate trivial notifications covering error messages from the plugin.
+Drop the "experimental" flag.
 
 0.7.7
 Show icons in plugin selection combo box. Patch by Nyall Dawson.

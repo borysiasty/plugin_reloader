@@ -27,7 +27,7 @@ tags=reloader, reload, python, development, developer
 
 icon=reload.png
 
-experimental=True
+experimental=False
 
 # deprecated flag (applies to the whole plugin, not just a single version
 deprecated=False
