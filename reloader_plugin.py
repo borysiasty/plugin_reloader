@@ -88,6 +88,24 @@ class ReloaderPlugin():
     self.toolButton.setPopupMode(QToolButton.MenuButtonPopup)
     self.toolBtnAction = self.iface.addToolBarWidget(self.toolButton)
 
+    if QSettings().value('locale/overrideFlag', type=bool):
+        locale = QSettings().value('locale/userLocale')
+    else:
+        locale = QLocale.system().name()
+
+    locale_path = os.path.join(
+        os.path.dirname(__file__),
+        'i18n',
+        'plugin_reloader_{}.qm'.format(locale[0:2]))
+
+    if os.path.exists(locale_path):
+        self.translator = QTranslator()
+        self.translator.load(locale_path)
+        QCoreApplication.installTranslator(self.translator)
+
+  def tr(self, message):
+    return QCoreApplication.translate('ReloaderPlugin', message)
+
   def theBestShortcutForPluginReload(self):
     ''' Try to find the best saved setting.
         Note **the action name is variable**, so the "Keyboard Shortcuts" window
@@ -101,9 +119,9 @@ class ReloaderPlugin():
     settings = QSettings()
     settings.beginGroup('shortcuts')
     # Find all saved shortcuts:
-    keys = [key for key in settings.childKeys() if key.startswith('Reload plugin: ')]
-    if settings.contains('Reload chosen plugin'):
-        keys.append('Reload chosen plugin')
+    keys = [key for key in settings.childKeys() if key.startswith(self.tr('Reload plugin: '))]
+    if settings.contains(self.tr('Reload chosen plugin')):
+        keys.append(self.tr('Reload chosen plugin'))
     if not len(keys):
         # Nothing found in settings - fallback to default:
         key = None
@@ -130,15 +148,15 @@ class ReloaderPlugin():
   def initGui(self):
     self.actionRun = QAction(
       QIcon(os.path.join(os.path.dirname(__file__), "reload.png")),
-      "Reload chosen plugin",
+      self.tr('Reload chosen plugin'),
       self.iface.mainWindow()
     )
-    self.actionRun.setToolTip("Reload chosen plugin")
+    self.actionRun.setToolTip(self.tr('Reload chosen plugin'))
     plugin = currentPlugin()
     if plugin:
-      self.actionRun.setToolTip("Reload plugin: {}".format(plugin))
-      self.actionRun.setText("Reload plugin: {}".format(plugin))
-    self.iface.addPluginToMenu("&Plugin Reloader", self.actionRun)
+      self.actionRun.setToolTip(self.tr('Reload plugin: {}').format(plugin))
+      self.actionRun.setText(self.tr('Reload plugin: {}').format(plugin))
+    self.iface.addPluginToMenu(self.tr('&Plugin Reloader'), self.actionRun)
     self.iface.registerMainWindowAction(self.actionRun, self.theBestShortcutForPluginReload())
     m = self.toolButton.menu()
     m.addAction(self.actionRun)
@@ -146,22 +164,21 @@ class ReloaderPlugin():
     self.actionRun.triggered.connect(self.run)
     self.actionConfigure = QAction(
       QIcon(os.path.join(os.path.dirname(__file__), "reload-conf.png")),
-      "Configure",
+      self.tr('Configure'),
       self.iface.mainWindow()
     )
     self.iface.registerMainWindowAction(self.actionConfigure, "Shift+F5")
-    self.actionConfigure.setToolTip("Choose a plugin to be reloaded")
+    self.actionConfigure.setToolTip(self.tr('Choose a plugin to be reloaded'))
     m.addAction(self.actionConfigure)
-    self.iface.addPluginToMenu("&Plugin Reloader", self.actionConfigure)
+    self.iface.addPluginToMenu(self.tr('&Plugin Reloader'), self.actionConfigure)
     self.actionConfigure.triggered.connect(self.configure)
 
   def unload(self):
-    self.iface.removePluginMenu("&Plugin Reloader",self.actionRun)
-    self.iface.removePluginMenu("&Plugin Reloader",self.actionConfigure)
-    self.iface.removeToolBarIcon(self.actionRun)
-    self.iface.removeToolBarIcon(self.actionConfigure)
-    self.iface.unregisterMainWindowAction(self.actionRun)
-    self.iface.unregisterMainWindowAction(self.actionConfigure)
+    for action in [self.actionRun,self.actionConfigure]:
+        self.iface.removePluginMenu(self.tr('&Plugin Reloader'),action)
+        self.iface.removeToolBarIcon(action)
+        self.iface.unregisterMainWindowAction(action)
+
     self.iface.removeToolBarIcon(self.toolBtnAction)
 
   def run(self):
@@ -193,7 +210,7 @@ class ReloaderPlugin():
       reloadPlugin(plugin)
       self.iface.mainWindow().restoreState(state)
       if notificationsEnabled():
-        self.iface.messageBar().pushMessage("<b>{}</b> reloaded.".format(plugin), Qgis.Info)
+        self.iface.messageBar().pushMessage(self.tr('<b>{}</b> reloaded.').format(plugin), Qgis.Info)
 
   def configure(self):
     dlg = ConfigureReloaderDialog(self.iface)
@@ -201,7 +218,7 @@ class ReloaderPlugin():
     if dlg.result():
       plugin = dlg.comboPlugin.currentText()
       settings = QSettings()
-      self.actionRun.setToolTip("Reload plugin: {}".format(plugin))
-      self.actionRun.setText("Reload plugin: {}".format(plugin))
+      self.actionRun.setToolTip(self.tr('Reload plugin: {}').format(plugin))
+      self.actionRun.setText(self.tr('Reload plugin: {}').format(plugin))
       setCurrentPlugin(plugin)
       setNotificationsEnabled(dlg.cbNotifications.isChecked())

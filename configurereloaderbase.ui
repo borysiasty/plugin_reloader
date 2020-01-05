@@ -140,7 +140,7 @@
    <item row="1" column="1">
     <widget class="QLabel" name="label">
      <property name="text">
-      <string> Select &amp;the plugin you want to reload</string>
+      <string>Select &amp;the plugin you want to reload</string>
      </property>
      <property name="buddy">
       <cstring>comboPlugin</cstring>
