@@ -16,7 +16,6 @@
 # ***************************************************************************
 
 import os
-import shlex
 import sys
 import subprocess
 from qgis.PyQt.QtCore import *
@@ -43,6 +42,10 @@ def notificationsEnabled():
     settings = QSettings()
     return settings.value('/PluginReloader/notify', True, type=bool)
 
+def getExtraCommands():
+    settings = QSettings()
+    return settings.value('/PluginReloader/extraCommands', '')
+
 def setNotificationsEnabled(enabled):
     ''' param enabled (bool): Yes or no I'm asking?
     '''
@@ -54,21 +57,22 @@ def setExtraCommands(commands):
     return settings.setValue('/PluginReloader/extraCommands', commands)
 
 def handleExtraCommands(message_bar, translator):
-    settings = QSettings()
-    extra_commands = settings.value('/PluginReloader/extraCommands', '', type=str)
+    extra_commands = getExtraCommands()
     if extra_commands != "":
         try:
-            subprocess.run(
-                shlex.quote(extra_commands),
+            completed_process = subprocess.run(
+                extra_commands,
                 shell=True,
                 capture_output=True,
-                check=True
+                check=True,
+                text=True,
             )
+            message_bar.pushMessage(completed_process.stdout, Qgis.Info)
         except subprocess.CalledProcessError as exc:
             message_bar.pushMessage(
-                translator('Could not execute extra commands: {}').format(exc.stderr)
+                translator('Could not execute extra commands: {}').format(exc.stderr),
+                Qgis.Warning
             )
-
 
 class ConfigureReloaderDialog (QDialog, Ui_ConfigureReloaderDialogBase):
   def __init__(self, parent):
@@ -76,6 +80,7 @@ class ConfigureReloaderDialog (QDialog, Ui_ConfigureReloaderDialogBase):
     self.iface = parent
     self.setupUi(self)
     self.cbNotifications.setChecked(notificationsEnabled())
+    self.pteExtraCommands.setPlainText(getExtraCommands())
 
     #update the plugin list first! The plugin could be removed from the list if was temporarily broken.
     #Still doesn't work in every case. TODO?: try to load from scratch the plugin saved in QSettings if doesn't exist
