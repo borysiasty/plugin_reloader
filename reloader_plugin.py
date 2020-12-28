@@ -16,7 +16,9 @@
 # ***************************************************************************
 
 import os
+import shlex
 import sys
+import subprocess
 from qgis.PyQt.QtCore import *
 from qgis.PyQt.QtGui import *
 from qgis.PyQt.QtWidgets import *
@@ -47,6 +49,25 @@ def setNotificationsEnabled(enabled):
     settings = QSettings()
     return settings.setValue('/PluginReloader/notify', enabled)
 
+def setExtraCommands(commands):
+    settings = QSettings()
+    return settings.setValue('/PluginReloader/extraCommands', commands)
+
+def handleExtraCommands(message_bar, translator):
+    settings = QSettings()
+    extra_commands = settings.value('/PluginReloader/extraCommands', '', type=str)
+    if extra_commands != "":
+        try:
+            subprocess.run(
+                shlex.quote(extra_commands),
+                shell=True,
+                capture_output=True,
+                check=True
+            )
+        except subprocess.CalledProcessError as exc:
+            message_bar.pushMessage(
+                translator('Could not execute extra commands: {}').format(exc.stderr)
+            )
 
 
 class ConfigureReloaderDialog (QDialog, Ui_ConfigureReloaderDialogBase):
@@ -207,6 +228,7 @@ class ReloaderPlugin():
             sys.modules[key].qCleanupResources()
           del sys.modules[key]
 
+      handleExtraCommands(self.iface.messageBar(), self.tr)
       reloadPlugin(plugin)
       self.iface.mainWindow().restoreState(state)
       if notificationsEnabled():
@@ -222,3 +244,4 @@ class ReloaderPlugin():
       self.actionRun.setText(self.tr('Reload plugin: {}').format(plugin))
       setCurrentPlugin(plugin)
       setNotificationsEnabled(dlg.cbNotifications.isChecked())
+      setExtraCommands(dlg.pteExtraCommands.toPlainText())
