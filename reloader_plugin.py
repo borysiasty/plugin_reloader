@@ -80,19 +80,6 @@ class ConfigureReloaderDialog (QDialog, Ui_ConfigureReloaderDialogBase):
     self.iface = parent
     self.setupUi(self)
     self.cbNotifications.setChecked(notificationsEnabled())
-    self.pteExtraCommands.setToolTip(
-       QCoreApplication.translate(
-           'ReloaderPlugin',
-           (
-               '<html><head/><body>'
-               '<p>QGIS will try to execute any commands typed here in a shell '
-               'before reloading the plugin.</p>'
-               '<p>This can be useful, for example, if you '
-               'need to copy the new source code into the QGIS plugins directory.</p>'
-               '</body></html>'
-           )
-       )
-    )
     self.pteExtraCommands.setPlainText(getExtraCommands())
 
     #update the plugin list first! The plugin could be removed from the list if was temporarily broken.

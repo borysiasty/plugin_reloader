@@ -1,3 +1,6 @@
+0.8
+Add ability to run extra commands before reloading plugin. Pathch by Ricardo Silva.
+
 0.7.9
 Enable localizations, add Polish translation. Thanks to Zbigniew Prajs.
 
