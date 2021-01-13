@@ -17,6 +17,7 @@
 
 import os
 import sys
+import subprocess
 from qgis.PyQt.QtCore import *
 from qgis.PyQt.QtGui import *
 from qgis.PyQt.QtWidgets import *
@@ -41,13 +42,37 @@ def notificationsEnabled():
     settings = QSettings()
     return settings.value('/PluginReloader/notify', True, type=bool)
 
+def getExtraCommands():
+    settings = QSettings()
+    return settings.value('/PluginReloader/extraCommands', '')
+
 def setNotificationsEnabled(enabled):
     ''' param enabled (bool): Yes or no I'm asking?
     '''
     settings = QSettings()
     return settings.setValue('/PluginReloader/notify', enabled)
 
+def setExtraCommands(commands):
+    settings = QSettings()
+    return settings.setValue('/PluginReloader/extraCommands', commands)
 
+def handleExtraCommands(message_bar, translator):
+    extra_commands = getExtraCommands()
+    if extra_commands != "":
+        try:
+            completed_process = subprocess.run(
+                extra_commands,
+                shell=True,
+                capture_output=True,
+                check=True,
+                text=True,
+            )
+            message_bar.pushMessage(completed_process.stdout, Qgis.Info)
+        except subprocess.CalledProcessError as exc:
+            message_bar.pushMessage(
+                translator('Could not execute extra commands: {}').format(exc.stderr),
+                Qgis.Warning
+            )
 
 class ConfigureReloaderDialog (QDialog, Ui_ConfigureReloaderDialogBase):
   def __init__(self, parent):
@@ -55,6 +80,20 @@ class ConfigureReloaderDialog (QDialog, Ui_ConfigureReloaderDialogBase):
     self.iface = parent
     self.setupUi(self)
     self.cbNotifications.setChecked(notificationsEnabled())
+    self.pteExtraCommands.setToolTip(
+       QCoreApplication.translate(
+           'ReloaderPlugin',
+           (
+               '<html><head/><body>'
+               '<p>QGIS will try to execute any commands typed here in a shell '
+               'before reloading the plugin.</p>'
+               '<p>This can be useful, for example, if you '
+               'need to copy the new source code into the QGIS plugins directory.</p>'
+               '</body></html>'
+           )
+       )
+    )
+    self.pteExtraCommands.setPlainText(getExtraCommands())
 
     #update the plugin list first! The plugin could be removed from the list if was temporarily broken.
     #Still doesn't work in every case. TODO?: try to load from scratch the plugin saved in QSettings if doesn't exist
@@ -207,6 +246,7 @@ class ReloaderPlugin():
             sys.modules[key].qCleanupResources()
           del sys.modules[key]
 
+      handleExtraCommands(self.iface.messageBar(), self.tr)
       reloadPlugin(plugin)
       self.iface.mainWindow().restoreState(state)
       if notificationsEnabled():
@@ -222,3 +262,4 @@ class ReloaderPlugin():
       self.actionRun.setText(self.tr('Reload plugin: {}').format(plugin))
       setCurrentPlugin(plugin)
       setNotificationsEnabled(dlg.cbNotifications.isChecked())
+      setExtraCommands(dlg.pteExtraCommands.toPlainText())
