@@ -237,7 +237,7 @@ class ReloaderPlugin():
       reloadPlugin(plugin)
       self.iface.mainWindow().restoreState(state)
       if notificationsEnabled():
-        self.iface.messageBar().pushMessage(self.tr('<b>{}</b> reloaded.').format(plugin), Qgis.Info)
+        self.iface.messageBar().pushMessage(self.tr('<b>{}</b> reloaded.').format(plugin), Qgis.Success)
 
   def configure(self):
     dlg = ConfigureReloaderDialog(self.iface)
