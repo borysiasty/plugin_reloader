@@ -38,6 +38,10 @@ def setCurrentPlugin(plugin):
     settings = QSettings()
     settings.setValue('/PluginReloader/plugin', plugin)
 
+def appendPluginNameEnabled():
+    settings = QSettings()
+    return settings.value('/PluginReloader/appendPluginName', True, type=bool)
+
 def notificationsEnabled():
     settings = QSettings()
     return settings.value('/PluginReloader/notify', True, type=bool)
@@ -45,6 +49,12 @@ def notificationsEnabled():
 def getExtraCommands():
     settings = QSettings()
     return settings.value('/PluginReloader/extraCommands', '')
+
+def setAppendPluginNameEnabled(enabled):
+    ''' param enabled (bool): Yes or no I'm asking?
+    '''
+    settings = QSettings()
+    return settings.setValue('/PluginReloader/appendPluginName', enabled)
 
 def setNotificationsEnabled(enabled):
     ''' param enabled (bool): Yes or no I'm asking?
@@ -61,6 +71,9 @@ def handleExtraCommands(message_bar, translator):
     successExtraCommands = True
     if extra_commands != "":
         try:
+            if appendPluginNameEnabled():
+                extra_commands += " " + currentPlugin()
+            
             completed_process = subprocess.run(
                 extra_commands,
                 shell=True,
@@ -85,6 +98,7 @@ class ConfigureReloaderDialog (QDialog, Ui_ConfigureReloaderDialogBase):
     super().__init__()
     self.iface = parent
     self.setupUi(self)
+    self.cbAppendPluginName.setChecked(appendPluginNameEnabled())
     self.cbNotifications.setChecked(notificationsEnabled())
     self.pteExtraCommands.setPlainText(getExtraCommands())
 
@@ -255,5 +269,6 @@ class ReloaderPlugin():
       self.actionRun.setToolTip(self.tr('Reload plugin: {}').format(plugin))
       self.actionRun.setText(self.tr('Reload plugin: {}').format(plugin))
       setCurrentPlugin(plugin)
+      setAppendPluginNameEnabled(dlg.cbAppendPluginName.isChecked())
       setNotificationsEnabled(dlg.cbNotifications.isChecked())
       setExtraCommands(dlg.pteExtraCommands.toPlainText())
