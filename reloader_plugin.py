@@ -239,11 +239,12 @@ class ReloaderPlugin():
             sys.modules[key].qCleanupResources()
           del sys.modules[key]
 
-      handleExtraCommands(self.iface.messageBar(), self.tr)
-      reloadPlugin(plugin)
-      self.iface.mainWindow().restoreState(state)
-      if notificationsEnabled():
-        self.iface.messageBar().pushMessage(self.tr('<b>{}</b> reloaded.').format(plugin), Qgis.Success)
+      successExtraCommands = handleExtraCommands(self.iface.messageBar(), self.tr)
+      if successExtraCommands:
+        reloadPlugin(plugin)
+        self.iface.mainWindow().restoreState(state)
+        if notificationsEnabled():
+          self.iface.messageBar().pushMessage(self.tr('<b>{}</b> reloaded.').format(plugin), Qgis.Success)
 
   def configure(self):
     dlg = ConfigureReloaderDialog(self.iface)
