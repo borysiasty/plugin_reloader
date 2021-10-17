@@ -66,21 +66,20 @@ def setExtraCommands(commands):
 
 def handleExtraCommands(message_bar, translator):
     extra_commands = getExtraCommands()
-    if extra_commands != "":
-        try:
-            completed_process = subprocess.run(
-                extra_commands,
-                shell=True,
-                capture_output=True,
-                check=True,
-                text=True,
-            )
-            message_bar.pushMessage(completed_process.stdout, Qgis.Info)
-        except subprocess.CalledProcessError as exc:
-            message_bar.pushMessage(
-                translator('Could not execute extra commands: {}').format(exc.stderr),
-                Qgis.Warning
-            )
+    try:
+        completed_process = subprocess.run(
+            extra_commands,
+            shell=True,
+            capture_output=True,
+            check=True,
+            text=True,
+        )
+        message_bar.pushMessage(completed_process.stdout, Qgis.Info)
+    except subprocess.CalledProcessError as exc:
+        message_bar.pushMessage(
+            translator('Could not execute extra commands: {}').format(exc.stderr),
+            Qgis.Warning
+        )
 
 class ConfigureReloaderDialog (QDialog, Ui_ConfigureReloaderDialogBase):
   def __init__(self, parent):
