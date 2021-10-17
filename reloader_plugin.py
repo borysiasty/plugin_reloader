@@ -52,6 +52,14 @@ def setNotificationsEnabled(enabled):
     settings = QSettings()
     return settings.setValue('/PluginReloader/notify', enabled)
 
+def extraCommandsEnabled():
+    settings = QSettings()
+    return settings.value('/PluginReloader/extraCommandsEnabled', True, type=bool)
+
+def setExtraCommandsEnabled(enabled):
+    settings = QSettings()
+    return settings.setValue('/PluginReloader/extraCommandsEnabled', enabled)
+
 def setExtraCommands(commands):
     settings = QSettings()
     return settings.setValue('/PluginReloader/extraCommands', commands)
@@ -232,8 +240,9 @@ class ReloaderPlugin():
           if hasattr(sys.modules[key], 'qCleanupResources'):
             sys.modules[key].qCleanupResources()
           del sys.modules[key]
-
-      handleExtraCommands(self.iface.messageBar(), self.tr)
+      
+      if extraCommandsEnabled():
+        handleExtraCommands(self.iface.messageBar(), self.tr)
       reloadPlugin(plugin)
       self.iface.mainWindow().restoreState(state)
       if notificationsEnabled():
@@ -249,4 +258,5 @@ class ReloaderPlugin():
       self.actionRun.setText(self.tr('Reload plugin: {}').format(plugin))
       setCurrentPlugin(plugin)
       setNotificationsEnabled(dlg.cbNotifications.isChecked())
+      setExtraCommandsEnabled(dlg.cbExtraCommands.isChecked())
       setExtraCommands(dlg.pteExtraCommands.toPlainText())
