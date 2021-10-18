@@ -182,8 +182,6 @@ class ReloaderPlugin():
     if plugin:
       self.actionRun.setToolTip(self.tr('Reload plugin: {}').format(plugin))
       self.actionRun.setText(self.tr('Reload plugin: {}').format(plugin))
-    else:
-      setCurrentPlugin("plugin_reloader")
     self.iface.addPluginToMenu(self.tr('&Plugin Reloader'), self.actionRun)
     self.iface.registerMainWindowAction(self.actionRun, self.theBestShortcutForPluginReload())
     m = self.toolButton.menu()
@@ -214,7 +212,7 @@ class ReloaderPlugin():
     #update the plugin list first! The plugin could be removed from the list if was temporarily broken.
     updateAvailablePlugins()
     #try to load from scratch the plugin saved in QSettings if not loaded
-    if plugin not in plugins:
+    if plugin not in plugins and plugin != "":
       try:
         loadPlugin(plugin)
         startPlugin(plugin)
@@ -223,7 +221,9 @@ class ReloaderPlugin():
     updateAvailablePlugins()
     #give one chance for correct (not a loop)
     if plugin not in plugins:
+      self.iface.messageBar().pushMessage(self.tr('Plugin <b>{}</b> not found.').format(plugin), Qgis.Warning, 0)
       self.configure()
+      self.iface.messageBar().currentItem().dismiss()
       plugin = currentPlugin()
     if plugin in plugins:
       state = self.iface.mainWindow().saveState()
