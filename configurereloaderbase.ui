@@ -78,22 +78,6 @@
     </widget>
    </item>
    <item>
-    <widget class="QCheckBox" name="cbAppendPluginName">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <property name="toolTip">
-      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Will change a command like&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;python makeBackup.py&lt;/span&gt;&lt;/p&gt;&lt;p&gt;to&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;python makeBackup.py plugin_reloader&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-     </property>
-     <property name="text">
-      <string>Append plugin's name to the command typed</string>
-     </property>
-    </widget>
-   </item>
-   <item>
     <widget class="QCheckBox" name="cbNotifications">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
