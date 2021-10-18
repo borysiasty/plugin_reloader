@@ -182,6 +182,8 @@ class ReloaderPlugin():
     if plugin:
       self.actionRun.setToolTip(self.tr('Reload plugin: {}').format(plugin))
       self.actionRun.setText(self.tr('Reload plugin: {}').format(plugin))
+    else:
+      setCurrentPlugin("plugin_reloader")
     self.iface.addPluginToMenu(self.tr('&Plugin Reloader'), self.actionRun)
     self.iface.registerMainWindowAction(self.actionRun, self.theBestShortcutForPluginReload())
     m = self.toolButton.menu()
