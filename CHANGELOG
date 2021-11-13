@@ -1,4 +1,13 @@
-0.8.2 
+0.9
+Prevent error if no plugin is set. Path by Jean-François Bourdon.
+Allow temporary disabling of Extra commands. Path by Jean-François Bourdon.
+Handle non-utf8 caracters in error message if extra commands fails. Path by Jean-François Bourdon.
+Option to append plugin' name to the extra commands typed. Path by Jean-François Bourdon.
+Add the reload time to the success message.
+Add German translation. Path by Werner Macho.
+Update Polish translation.
+
+0.8.2
 Make the notification Success rather than Info. Patch by Étienne Trimaille.
 
 0.8.1
