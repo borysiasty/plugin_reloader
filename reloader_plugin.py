@@ -66,20 +66,28 @@ def setExtraCommands(commands):
 
 def handleExtraCommands(message_bar, translator):
     extra_commands = getExtraCommands()
-    try:
-        completed_process = subprocess.run(
-            extra_commands,
-            shell=True,
-            capture_output=True,
-            check=True,
-            text=True,
-        )
-        message_bar.pushMessage(completed_process.stdout, Qgis.Info)
-    except subprocess.CalledProcessError as exc:
-        message_bar.pushMessage(
-            translator('Could not execute extra commands: {}').format(exc.stderr),
-            Qgis.Warning
-        )
+    successExtraCommands = True
+    if extra_commands != "":
+        try:
+            completed_process = subprocess.run(
+                extra_commands,
+                shell=True,
+                capture_output=True,
+                check=True,
+                text=True,
+            )
+
+            message_bar.pushMessage(
+                completed_process.stdout.decode('utf-8', 'replace'),
+                Qgis.Info
+            )
+        except subprocess.CalledProcessError as exc:
+            message_bar.pushMessage(
+                translator('Could not execute extra commands: {}').format(exc.stderr.decode('utf-8', 'replace')),
+                Qgis.Warning
+            )
+            successExtraCommands = False
+    return successExtraCommands
 
 class ConfigureReloaderDialog (QDialog, Ui_ConfigureReloaderDialogBase):
   def __init__(self, parent):
@@ -241,9 +249,12 @@ class ReloaderPlugin():
           if hasattr(sys.modules[key], 'qCleanupResources'):
             sys.modules[key].qCleanupResources()
           del sys.modules[key]
-      
+
       if extraCommandsEnabled():
-        handleExtraCommands(self.iface.messageBar(), self.tr)
+        successExtraCommands = handleExtraCommands(self.iface.messageBar(), self.tr)
+        if not successExtraCommands:
+          return
+
       reloadPlugin(plugin)
       self.iface.mainWindow().restoreState(state)
       if notificationsEnabled():
