@@ -52,27 +52,34 @@ def setNotificationsEnabled(enabled):
     settings = QSettings()
     return settings.setValue('/PluginReloader/notify', enabled)
 
+def extraCommandsEnabled():
+    settings = QSettings()
+    return settings.value('/PluginReloader/extraCommandsEnabled', True, type=bool)
+
+def setExtraCommandsEnabled(enabled):
+    settings = QSettings()
+    return settings.setValue('/PluginReloader/extraCommandsEnabled', enabled)
+
 def setExtraCommands(commands):
     settings = QSettings()
     return settings.setValue('/PluginReloader/extraCommands', commands)
 
 def handleExtraCommands(message_bar, translator):
     extra_commands = getExtraCommands()
-    if extra_commands != "":
-        try:
-            completed_process = subprocess.run(
-                extra_commands,
-                shell=True,
-                capture_output=True,
-                check=True,
-                text=True,
-            )
-            message_bar.pushMessage(completed_process.stdout, Qgis.Info)
-        except subprocess.CalledProcessError as exc:
-            message_bar.pushMessage(
-                translator('Could not execute extra commands: {}').format(exc.stderr),
-                Qgis.Warning
-            )
+    try:
+        completed_process = subprocess.run(
+            extra_commands,
+            shell=True,
+            capture_output=True,
+            check=True,
+            text=True,
+        )
+        message_bar.pushMessage(completed_process.stdout, Qgis.Info)
+    except subprocess.CalledProcessError as exc:
+        message_bar.pushMessage(
+            translator('Could not execute extra commands: {}').format(exc.stderr),
+            Qgis.Warning
+        )
 
 class ConfigureReloaderDialog (QDialog, Ui_ConfigureReloaderDialogBase):
   def __init__(self, parent):
@@ -232,8 +239,9 @@ class ReloaderPlugin():
           if hasattr(sys.modules[key], 'qCleanupResources'):
             sys.modules[key].qCleanupResources()
           del sys.modules[key]
-
-      handleExtraCommands(self.iface.messageBar(), self.tr)
+      
+      if extraCommandsEnabled():
+        handleExtraCommands(self.iface.messageBar(), self.tr)
       reloadPlugin(plugin)
       self.iface.mainWindow().restoreState(state)
       if notificationsEnabled():
@@ -249,4 +257,5 @@ class ReloaderPlugin():
       self.actionRun.setText(self.tr('Reload plugin: {}').format(plugin))
       setCurrentPlugin(plugin)
       setNotificationsEnabled(dlg.cbNotifications.isChecked())
+      setExtraCommandsEnabled(dlg.cbExtraCommands.isChecked())
       setExtraCommands(dlg.pteExtraCommands.toPlainText())
