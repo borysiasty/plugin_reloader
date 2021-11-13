@@ -46,7 +46,7 @@
     <message>
         <location filename="../reloader_plugin.py" line="166"/>
         <source>Reload plugin: </source>
-        <translation>Przeładu wtyczkę: </translation>
+        <translation>Przeładuj wtyczkę: </translation>
     </message>
     <message>
         <location filename="../reloader_plugin.py" line="198"/>
