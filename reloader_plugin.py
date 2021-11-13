@@ -18,6 +18,7 @@
 import os
 import sys
 import subprocess
+from time import time
 from qgis.PyQt.QtCore import *
 from qgis.PyQt.QtGui import *
 from qgis.PyQt.QtWidgets import *
@@ -225,6 +226,8 @@ class ReloaderPlugin():
     self.iface.removeToolBarIcon(self.toolBtnAction)
 
   def run(self):
+    startTime = time()
+
     plugin = currentPlugin()
     #update the plugin list first! The plugin could be removed from the list if was temporarily broken.
     updateAvailablePlugins()
@@ -258,9 +261,15 @@ class ReloaderPlugin():
           return
 
       reloadPlugin(plugin)
+      endTime = time()
+
       self.iface.mainWindow().restoreState(state)
       if notificationsEnabled():
-        self.iface.messageBar().pushMessage(self.tr('<b>{}</b> reloaded.').format(plugin), Qgis.Success)
+        # Not sure if we're more interested in the total time (a developer's business) or just qgis.utils.reloadPlugin
+        # (to see how much a huge plugin slows down the QGIS start).
+        duration = int(round((endTime - startTime) * 1000))
+        self.iface.messageBar().pushMessage(self.tr('<b>{}</b> reloaded in {} ms.').format(plugin, duration),
+                                            Qgis.Success)
 
   def configure(self):
     dlg = ConfigureReloaderDialog(self.iface)
