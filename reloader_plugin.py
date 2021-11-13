@@ -69,6 +69,7 @@ def handleExtraCommands(message_bar, translator):
     successExtraCommands = True
     if extra_commands != "":
         try:
+            extra_commands = extra_commands.replace('%PluginName%', currentPlugin())
             completed_process = subprocess.run(
                 extra_commands,
                 shell=True,
