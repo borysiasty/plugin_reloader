@@ -77,10 +77,11 @@ def handleExtraCommands(message_bar, translator):
                 check=True,
             )
 
-            message_bar.pushMessage(
-                completed_process.stdout.decode('utf-8', 'replace'),
-                Qgis.Info
-            )
+            if completed_process.stdout:
+                message_bar.pushMessage(
+                    completed_process.stdout.decode('utf-8', 'replace'),
+                    Qgis.Info
+                )
         except subprocess.CalledProcessError as exc:
             message_bar.pushMessage(
                 translator('Could not execute extra commands: {}').format(exc.stderr.decode('utf-8', 'replace')),
