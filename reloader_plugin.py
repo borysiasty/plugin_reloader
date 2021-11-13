@@ -75,7 +75,6 @@ def handleExtraCommands(message_bar, translator):
                 shell=True,
                 capture_output=True,
                 check=True,
-                text=True,
             )
 
             message_bar.pushMessage(
