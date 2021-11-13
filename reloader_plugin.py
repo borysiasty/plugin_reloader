@@ -52,6 +52,14 @@ def setNotificationsEnabled(enabled):
     settings = QSettings()
     return settings.setValue('/PluginReloader/notify', enabled)
 
+def extraCommandsEnabled():
+    settings = QSettings()
+    return settings.value('/PluginReloader/extraCommandsEnabled', True, type=bool)
+
+def setExtraCommandsEnabled(enabled):
+    settings = QSettings()
+    return settings.setValue('/PluginReloader/extraCommandsEnabled', enabled)
+
 def setExtraCommands(commands):
     settings = QSettings()
     return settings.setValue('/PluginReloader/extraCommands', commands)
@@ -66,6 +74,7 @@ def handleExtraCommands(message_bar, translator):
                 shell=True,
                 capture_output=True,
                 check=True,
+                text=True,
             )
 
             message_bar.pushMessage(
@@ -218,7 +227,7 @@ class ReloaderPlugin():
     #update the plugin list first! The plugin could be removed from the list if was temporarily broken.
     updateAvailablePlugins()
     #try to load from scratch the plugin saved in QSettings if not loaded
-    if plugin not in plugins:
+    if plugin not in plugins and plugin != "":
       try:
         loadPlugin(plugin)
         startPlugin(plugin)
@@ -227,7 +236,9 @@ class ReloaderPlugin():
     updateAvailablePlugins()
     #give one chance for correct (not a loop)
     if plugin not in plugins:
+      self.iface.messageBar().pushMessage(self.tr('Plugin <b>{}</b> not found.').format(plugin), Qgis.Warning, 0)
       self.configure()
+      self.iface.messageBar().currentItem().dismiss()
       plugin = currentPlugin()
     if plugin in plugins:
       state = self.iface.mainWindow().saveState()
@@ -239,12 +250,15 @@ class ReloaderPlugin():
             sys.modules[key].qCleanupResources()
           del sys.modules[key]
 
-      successExtraCommands = handleExtraCommands(self.iface.messageBar(), self.tr)
-      if successExtraCommands:
-        reloadPlugin(plugin)
-        self.iface.mainWindow().restoreState(state)
-        if notificationsEnabled():
-          self.iface.messageBar().pushMessage(self.tr('<b>{}</b> reloaded.').format(plugin), Qgis.Success)
+      if extraCommandsEnabled():
+        successExtraCommands = handleExtraCommands(self.iface.messageBar(), self.tr)
+        if not successExtraCommands:
+          return
+
+      reloadPlugin(plugin)
+      self.iface.mainWindow().restoreState(state)
+      if notificationsEnabled():
+        self.iface.messageBar().pushMessage(self.tr('<b>{}</b> reloaded.').format(plugin), Qgis.Success)
 
   def configure(self):
     dlg = ConfigureReloaderDialog(self.iface)
@@ -256,4 +270,5 @@ class ReloaderPlugin():
       self.actionRun.setText(self.tr('Reload plugin: {}').format(plugin))
       setCurrentPlugin(plugin)
       setNotificationsEnabled(dlg.cbNotifications.isChecked())
+      setExtraCommandsEnabled(dlg.cbExtraCommands.isChecked())
       setExtraCommands(dlg.pteExtraCommands.toPlainText())
