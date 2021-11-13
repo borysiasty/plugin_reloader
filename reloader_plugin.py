@@ -95,6 +95,7 @@ class ConfigureReloaderDialog (QDialog, Ui_ConfigureReloaderDialogBase):
     self.iface = parent
     self.setupUi(self)
     self.cbNotifications.setChecked(notificationsEnabled())
+    self.cbExtraCommands.setChecked(extraCommandsEnabled())
     self.pteExtraCommands.setPlainText(getExtraCommands())
 
     #update the plugin list first! The plugin could be removed from the list if was temporarily broken.
