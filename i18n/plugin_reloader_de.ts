@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS><TS version="2.0" language="de_DE" sourcelanguage="">
+<!DOCTYPE TS>
+<TS version="2.1" language="de_DE">
 <context>
     <name>ConfigureReloaderDialogBase</name>
     <message>
@@ -37,17 +38,17 @@
     <message>
         <location filename="../configurereloaderbase.ui" line="45"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Push a notification about the successful reload to the QGIS message bar.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Check this&lt;/span&gt;, if you like to be sure you reloaded the right plugin.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Uncheck this&lt;/span&gt;, if you hate trivial notifications covering error messages from the plugin.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Sende eine Benachrichtigung über das erfolgreiche Neuladen an die QGIS-Nachrichtenleiste.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Aktiviere&lt;/span&gt; diese Option,um zu überprüfen ob das richtige Plugin neu geladen wurde.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Deaktiviere&lt;/span&gt; diese Option, wenn triviale Benachrichtigungen zu Fehlermeldungen des Plugins nicht angezeigt werden sollen.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../configurereloaderbase.ui" line="90"/>
         <source>Note: any %PluginName% will be replaced by the plugin&apos;s name.</source>
-        <translation type="unfinished"></translation>
+        <translation>Bemerkung: %PluginName% wird ersetzt durch den Plugin Namen.</translation>
     </message>
     <message>
         <location filename="../configurereloaderbase.ui" line="135"/>
         <source>Run the commands below before reloading</source>
-        <translation type="unfinished"></translation>
+        <translation>Befehle, die vor dem Neuladen ausgeführt werden sollen</translation>
     </message>
 </context>
 <context>
@@ -90,12 +91,12 @@
     <message>
         <location filename="../reloader_plugin.py" line="243"/>
         <source>Plugin &lt;b&gt;{}&lt;/b&gt; not found.</source>
-        <translation type="unfinished"></translation>
+        <translation>Plugin &lt;b&gt;{}&lt;/b&gt; nicht gefunden.</translation>
     </message>
     <message>
         <location filename="../reloader_plugin.py" line="278"/>
         <source>&lt;b&gt;{}&lt;/b&gt; reloaded in {} ms.</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;b&gt;{}&lt;/b&gt; neu geladen in {} ms.</translation>
     </message>
 </context>
 </TS>
