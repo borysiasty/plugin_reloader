@@ -24,7 +24,7 @@ from qgis.PyQt.QtGui import *
 from qgis.PyQt.QtWidgets import *
 from qgis.PyQt import uic
 from qgis.core import Qgis
-from qgis.utils import plugins, reloadPlugin, updateAvailablePlugins, loadPlugin, startPlugin
+from qgis.utils import plugins, reloadPlugin, updateAvailablePlugins, unloadPlugin, loadPlugin, startPlugin
 from pyplugin_installer import installer as plugin_installer
 
 Ui_ConfigureReloaderDialogBase = uic.loadUiType(os.path.join(os.path.dirname(__file__), 'configurereloaderbase.ui'))[0]
@@ -66,30 +66,31 @@ def setExtraCommands(commands):
     return settings.setValue('/PluginReloader/extraCommands', commands)
 
 def handleExtraCommands(message_bar, translator):
-    extra_commands = getExtraCommands()
-    successExtraCommands = True
-    if extra_commands != "":
-        try:
-            extra_commands = extra_commands.replace('%PluginName%', currentPlugin())
-            completed_process = subprocess.run(
-                extra_commands,
-                shell=True,
-                capture_output=True,
-                check=True,
-            )
+  try:
+    extraCommands = getExtraCommands()
+    if extraCommands.strip() != "":  # Prevent an empty command to be run
+      completed_process = subprocess.run(
+        extraCommands.replace('%PluginName%', currentPlugin()),
+        shell=True,
+        capture_output=True,
+        check=True,
+      )
 
-            if completed_process.stdout:
-                message_bar.pushMessage(
-                    completed_process.stdout.decode('utf-8', 'replace'),
-                    Qgis.Info
-                )
-        except subprocess.CalledProcessError as exc:
-            message_bar.pushMessage(
-                translator('Could not execute extra commands: {}').format(exc.stderr.decode('utf-8', 'replace')),
-                Qgis.Warning
-            )
-            successExtraCommands = False
-    return successExtraCommands
+      message_bar.pushMessage(
+        completed_process.stdout.decode('utf-8', 'replace'),
+        Qgis.Info
+      )
+    
+    successExtraCommands = True
+
+  except subprocess.CalledProcessError as exc:
+    message_bar.pushMessage(
+      translator('Could not execute extra commands: {}').format(exc.stderr.decode('utf-8', 'replace')),
+      Qgis.Warning
+    )
+    successExtraCommands = False
+      
+  return successExtraCommands
 
 class ConfigureReloaderDialog (QDialog, Ui_ConfigureReloaderDialogBase):
   def __init__(self, parent):
@@ -226,25 +227,24 @@ class ReloaderPlugin():
     self.iface.removeToolBarIcon(self.toolBtnAction)
 
   def run(self):
-    startTime = time()
-
     plugin = currentPlugin()
+
     #update the plugin list first! The plugin could be removed from the list if was temporarily broken.
     updateAvailablePlugins()
+
     #try to load from scratch the plugin saved in QSettings if not loaded
     if plugin not in plugins and plugin != "":
-      try:
-        loadPlugin(plugin)
-        startPlugin(plugin)
-      except:
-        pass
-    updateAvailablePlugins()
+      loadPlugin(plugin)
+      startPlugin(plugin)
+      updateAvailablePlugins()
+    
     #give one chance for correct (not a loop)
     if plugin not in plugins:
       self.iface.messageBar().pushMessage(self.tr('Plugin <b>{}</b> not found.').format(plugin), Qgis.Warning, 0)
       self.configure()
       self.iface.messageBar().currentItem().dismiss()
       plugin = currentPlugin()
+    
     if plugin in plugins:
       state = self.iface.mainWindow().saveState()
 
@@ -259,17 +259,26 @@ class ReloaderPlugin():
         successExtraCommands = handleExtraCommands(self.iface.messageBar(), self.tr)
         if not successExtraCommands:
           return
-
-      reloadPlugin(plugin)
+      
+      # Reload plugin and check if it was successful.
+      # Starting with QGIS 3.22, qgis.utils.reloadPlugin() returns True/False
+      # but it returns nothing in prior versions. The function is
+      # thus replicated for compatibility.
+      startTime = time()
+      unloadPlugin(plugin)
+      loadPlugin(plugin)
+      pluginStarted = startPlugin(plugin)
       endTime = time()
 
       self.iface.mainWindow().restoreState(state)
-      if notificationsEnabled():
+      if notificationsEnabled() and pluginStarted:
         # Not sure if we're more interested in the total time (a developer's business) or just qgis.utils.reloadPlugin
         # (to see how much a huge plugin slows down the QGIS start).
         duration = int(round((endTime - startTime) * 1000))
-        self.iface.messageBar().pushMessage(self.tr('<b>{}</b> reloaded in {} ms.').format(plugin, duration),
-                                            Qgis.Success)
+        self.iface.messageBar().pushMessage(
+          self.tr('<b>{}</b> reloaded in {} ms.').format(plugin, duration),
+          Qgis.Success
+          )
 
   def configure(self):
     dlg = ConfigureReloaderDialog(self.iface)
