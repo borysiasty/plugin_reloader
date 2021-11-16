@@ -1,3 +1,6 @@
+0.9.1
+Add French translation. Patch by Jean-François Bourdon.
+
 0.9
 Prevent error if no plugin is set. Patch by Jean-François Bourdon.
 Extra commands fixes and improvements by Jean-François Bourdon:
