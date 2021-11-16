@@ -1,12 +1,12 @@
 0.9
-Prevent error if no plugin is set. Path by Jean-François Bourdon.
+Prevent error if no plugin is set. Patch by Jean-François Bourdon.
 Extra commands fixes and improvements by Jean-François Bourdon:
     - Don't run empty extra commands.
     - Allow temporary disabling of extra commands.
     - Handle non-utf8 caracters in error message if extra commands fails.
     - Option to append plugin' name to the extra commands typed.
 Add the reload time to the success message.
-Add German translation. Path by Werner Macho.
+Add German translation. Patch by Werner Macho.
 Update Polish translation.
 
 0.8.2
@@ -42,7 +42,7 @@ Update to recent API changes. Thanks to Francisco Raga, olivierh65 and Heikki Ve
 Improve GUI strings.
 
 0.7.2
-Restore QGIS UI state after reloading (backport changes from 0.6.4). Path by GeorchW.
+Restore QGIS UI state after reloading (backport changes from 0.6.4). Patch by GeorchW.
 Push a message to the main QgsMessageBar after reloading.
 Fixed tool button removing when unloading the plugin reloader itself.
 
@@ -50,15 +50,15 @@ Fixed tool button removing when unloading the plugin reloader itself.
 Set compatibility to QGIS version range 2.99 - 3.99
 
 0.7
-Python3 and PyQt5 compatible. Path by Denis Rouzaud.
+Python3 and PyQt5 compatible. Patch by Denis Rouzaud.
 Version for QGIS 2.99 only
 
 0.6.4
-Restore QGIS UI state after reloading. Path by GeorchW.
+Restore QGIS UI state after reloading. Patch by GeorchW.
 Version for QGIS 1.8 up to 2.98
 
 0.6.3
-Both actions grouped into a single toolbutton with a menu. Path by Ricardo Garcia Silva.
+Both actions grouped into a single toolbutton with a menu. Patch by Ricardo Garcia Silva.
 Last version compatible with QGIS < 1.8
 
 0.6.2
