@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS>
-<TS version="2.1" language="pl_PL">
+<!DOCTYPE TS><TS version="2.0" language="pl_PL" sourcelanguage="">
 <context>
     <name>ConfigureReloaderDialogBase</name>
     <message>
@@ -44,42 +43,42 @@
 <context>
     <name>ReloaderPlugin</name>
     <message>
-        <location filename="../reloader_plugin.py" line="166"/>
+        <location filename="../reloader_plugin.py" line="167"/>
         <source>Reload plugin: </source>
         <translation>Przeładuj wtyczkę: </translation>
     </message>
     <message>
-        <location filename="../reloader_plugin.py" line="198"/>
+        <location filename="../reloader_plugin.py" line="199"/>
         <source>Reload chosen plugin</source>
         <translation>Przeładuj wybraną wtyczkę</translation>
     </message>
     <message>
-        <location filename="../reloader_plugin.py" line="281"/>
+        <location filename="../reloader_plugin.py" line="290"/>
         <source>Reload plugin: {}</source>
         <translation>Przeładuj wtyczkę: {}</translation>
     </message>
     <message>
-        <location filename="../reloader_plugin.py" line="222"/>
+        <location filename="../reloader_plugin.py" line="223"/>
         <source>&amp;Plugin Reloader</source>
         <translation>&amp;Plugin Reloader</translation>
     </message>
     <message>
-        <location filename="../reloader_plugin.py" line="209"/>
+        <location filename="../reloader_plugin.py" line="210"/>
         <source>Configure</source>
         <translation>Ustawienia</translation>
     </message>
     <message>
-        <location filename="../reloader_plugin.py" line="215"/>
+        <location filename="../reloader_plugin.py" line="216"/>
         <source>Choose a plugin to be reloaded</source>
         <translation>Wybierz wtyczkę do przeładowania</translation>
     </message>
     <message>
-        <location filename="../reloader_plugin.py" line="244"/>
+        <location filename="../reloader_plugin.py" line="243"/>
         <source>Plugin &lt;b&gt;{}&lt;/b&gt; not found.</source>
         <translation>Nie znaleziono wtyczki &lt;b&gt;{}&lt;/b&gt;.</translation>
     </message>
     <message>
-        <location filename="../reloader_plugin.py" line="271"/>
+        <location filename="../reloader_plugin.py" line="278"/>
         <source>&lt;b&gt;{}&lt;/b&gt; reloaded in {} ms.</source>
         <translation>Wtyczka &lt;b&gt;{}&lt;/b&gt; przeładowana w {} ms.</translation>
     </message>

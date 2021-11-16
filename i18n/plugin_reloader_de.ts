@@ -53,32 +53,32 @@
 <context>
     <name>ReloaderPlugin</name>
     <message>
-        <location filename="../reloader_plugin.py" line="166"/>
+        <location filename="../reloader_plugin.py" line="167"/>
         <source>Reload plugin: </source>
         <translation>Plugin neu laden: </translation>
     </message>
     <message>
-        <location filename="../reloader_plugin.py" line="198"/>
+        <location filename="../reloader_plugin.py" line="199"/>
         <source>Reload chosen plugin</source>
         <translation>Ausgewähltes Plugin neu laden</translation>
     </message>
     <message>
-        <location filename="../reloader_plugin.py" line="281"/>
+        <location filename="../reloader_plugin.py" line="290"/>
         <source>Reload plugin: {}</source>
         <translation>Plugin neu laden: {}</translation>
     </message>
     <message>
-        <location filename="../reloader_plugin.py" line="222"/>
+        <location filename="../reloader_plugin.py" line="223"/>
         <source>&amp;Plugin Reloader</source>
         <translation>&amp;Plugin-Reloader</translation>
     </message>
     <message>
-        <location filename="../reloader_plugin.py" line="209"/>
+        <location filename="../reloader_plugin.py" line="210"/>
         <source>Configure</source>
         <translation>Konfigurieren</translation>
     </message>
     <message>
-        <location filename="../reloader_plugin.py" line="215"/>
+        <location filename="../reloader_plugin.py" line="216"/>
         <source>Choose a plugin to be reloaded</source>
         <translation>Wählen Sie ein Plugin aus, das neu geladen werden soll</translation>
     </message>
@@ -88,12 +88,12 @@
         <translation type="obsolete">&lt;b&gt;{}&lt;/b&gt; neu geladen.</translation>
     </message>
     <message>
-        <location filename="../reloader_plugin.py" line="244"/>
+        <location filename="../reloader_plugin.py" line="243"/>
         <source>Plugin &lt;b&gt;{}&lt;/b&gt; not found.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../reloader_plugin.py" line="271"/>
+        <location filename="../reloader_plugin.py" line="278"/>
         <source>&lt;b&gt;{}&lt;/b&gt; reloaded in {} ms.</source>
         <translation type="unfinished"></translation>
     </message>
