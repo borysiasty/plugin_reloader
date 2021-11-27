@@ -32,7 +32,7 @@
     <message>
         <location filename="../configurereloaderbase.ui" line="90"/>
         <source>Note: any %PluginName% will be replaced by the plugin&apos;s name.</source>
-        <translation>Możesz uzyć zmiennej %PluginName% zamiast nazwy wtyczki.</translation>
+        <translation>Możesz użyć zmiennej %PluginName% zamiast nazwy wtyczki.</translation>
     </message>
     <message>
         <location filename="../configurereloaderbase.ui" line="135"/>
