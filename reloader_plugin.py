@@ -97,32 +97,25 @@ def handleExtraCommands(message_bar, translator):
   return successExtraCommands
 
 def findPluginPath(pluginName):
-  pluginPath = None
+  # Get plugins directory from active profile
+  qgisPluginDirPaths = [os.path.join(QgsApplication.qgisSettingsDirPath(), 'python/plugins')]
 
-  # Check if the plugin is located in the active profile directory
-  qgisPluginDirPath = os.path.join(QgsApplication.qgisSettingsDirPath(), "python/plugins")
-  path_plugins = glob.glob(qgisPluginDirPath + "/*/")
-  name_plugins = [os.path.basename(os.path.dirname(x)) for x in path_plugins]
+  # Get plugins directories from QGIS_PLUGINPATH if environment variable is set
+  # It must be noted that the path order in QGIS_PLUGINPATH matters if the same plugin
+  # is found in more than one path as the first match has priority.
+  if 'QGIS_PLUGINPATH' in os.environ:
+    qgisPluginDirPaths = os.environ['QGIS_PLUGINPATH'].split(os.pathsep) + qgisPluginDirPaths
   
-  if pluginName in name_plugins:
-    idx = name_plugins.index(pluginName)
-    pluginPath = path_plugins[idx]
-
-  # Check if QGIS_PLUGINPATH environment variable is set
-  # If yes, will check if the plugin is located in this directory and
-  # will overwrite the pluginPath first found to make sure that the path
-  # correspond to the currently active plugin
-  # NOTE: Can QGIS_PLUGINPATH contain more than one path? If so, the code
-  #       would need to be adapted a bit
-  if "QGIS_PLUGINPATH" in os.environ:
-    qgisPluginDirPath = os.environ["QGIS_PLUGINPATH"]
-    path_plugins = glob.glob(qgisPluginDirPath + "/*/")
+  # Look for pluginName in each possible directory following
+  # prioritization order: profile -> QGIS_PLUGINPATH
+  for qgisPluginDirPath in reversed(qgisPluginDirPaths):
+    path_plugins = glob.glob(qgisPluginDirPath + '/*/')
     name_plugins = [os.path.basename(os.path.dirname(x)) for x in path_plugins]
     
     if pluginName in name_plugins:
       idx = name_plugins.index(pluginName)
       pluginPath = path_plugins[idx]
-
+  
   return os.path.normpath(pluginPath)
 
 class ConfigureReloaderDialog (QDialog, Ui_ConfigureReloaderDialogBase):
