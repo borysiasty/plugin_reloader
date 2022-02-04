@@ -16,7 +16,6 @@
 # ***************************************************************************
 
 import os
-import glob
 import sys
 import subprocess
 from time import time
@@ -24,7 +23,7 @@ from qgis.PyQt.QtCore import *
 from qgis.PyQt.QtGui import *
 from qgis.PyQt.QtWidgets import *
 from qgis.PyQt import uic
-from qgis.core import Qgis, QgsApplication
+from qgis.core import Qgis
 from qgis.utils import plugins, reloadPlugin, updateAvailablePlugins, unloadPlugin, loadPlugin, startPlugin
 from pyplugin_installer import installer as plugin_installer
 
@@ -71,7 +70,7 @@ def handleExtraCommands(message_bar, translator):
     extraCommands = getExtraCommands()
     if extraCommands.strip() != "":  # Prevent an empty command to be run
       extraCommands = extraCommands.replace('%PluginName%', currentPlugin())
-      extraCommands = extraCommands.replace('%PluginPath%', findPluginPath(currentPlugin()))
+      extraCommands = extraCommands.replace('%PluginPath%', plugin_installer.plugins.all()[currentPlugin()]['library']
 
       completed_process = subprocess.run(
         extraCommands,
@@ -95,28 +94,6 @@ def handleExtraCommands(message_bar, translator):
     successExtraCommands = False
       
   return successExtraCommands
-
-def findPluginPath(pluginName):
-  # Get plugins directory from active profile
-  qgisPluginDirPaths = [os.path.join(QgsApplication.qgisSettingsDirPath(), 'python/plugins')]
-
-  # Get plugins directories from QGIS_PLUGINPATH if environment variable is set
-  # It must be noted that the path order in QGIS_PLUGINPATH matters if the same plugin
-  # is found in more than one path as the first match has priority.
-  if 'QGIS_PLUGINPATH' in os.environ:
-    qgisPluginDirPaths = os.environ['QGIS_PLUGINPATH'].split(os.pathsep) + qgisPluginDirPaths
-  
-  # Look for pluginName in each possible directory following
-  # prioritization order: profile -> QGIS_PLUGINPATH
-  for qgisPluginDirPath in reversed(qgisPluginDirPaths):
-    path_plugins = glob.glob(qgisPluginDirPath + '/*/')
-    name_plugins = [os.path.basename(os.path.dirname(x)) for x in path_plugins]
-    
-    if pluginName in name_plugins:
-      idx = name_plugins.index(pluginName)
-      pluginPath = path_plugins[idx]
-  
-  return os.path.normpath(pluginPath)
 
 class ConfigureReloaderDialog (QDialog, Ui_ConfigureReloaderDialogBase):
   def __init__(self, parent):
