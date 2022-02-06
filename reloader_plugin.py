@@ -69,8 +69,11 @@ def handleExtraCommands(message_bar, translator):
   try:
     extraCommands = getExtraCommands()
     if extraCommands.strip() != "":  # Prevent an empty command to be run
+      extraCommands = extraCommands.replace('%PluginName%', currentPlugin())
+      extraCommands = extraCommands.replace('%PluginPath%', plugin_installer.plugins.all()[currentPlugin()]['library'])
+
       completed_process = subprocess.run(
-        extraCommands.replace('%PluginName%', currentPlugin()),
+        extraCommands,
         shell=True,
         capture_output=True,
         check=True,
