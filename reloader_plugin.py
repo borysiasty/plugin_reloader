@@ -230,6 +230,11 @@ class ReloaderPlugin():
     self.iface.removeToolBarIcon(self.toolBtnAction)
 
   def run(self):
+    if extraCommandsEnabled():
+      successExtraCommands = handleExtraCommands(self.iface.messageBar(), self.tr)
+      if not successExtraCommands:
+        return
+
     plugin = currentPlugin()
 
     #update the plugin list first! The plugin could be removed from the list if was temporarily broken.
@@ -257,11 +262,6 @@ class ReloaderPlugin():
           if hasattr(sys.modules[key], 'qCleanupResources'):
             sys.modules[key].qCleanupResources()
           del sys.modules[key]
-
-      if extraCommandsEnabled():
-        successExtraCommands = handleExtraCommands(self.iface.messageBar(), self.tr)
-        if not successExtraCommands:
-          return
       
       # Reload plugin and check if it was successful.
       # Starting with QGIS 3.22, qgis.utils.reloadPlugin() returns True/False
