@@ -230,6 +230,9 @@ class ReloaderPlugin():
     self.iface.removeToolBarIcon(self.toolBtnAction)
 
   def run(self):
+    if len(plugin_installer.plugins.all()) == 0:
+      plugin_installer.plugins.rebuild()
+
     if extraCommandsEnabled():
       successExtraCommands = handleExtraCommands(self.iface.messageBar(), self.tr)
       if not successExtraCommands:
@@ -284,6 +287,9 @@ class ReloaderPlugin():
           )
 
   def configure(self):
+    if len(plugin_installer.plugins.all()) == 0:
+      plugin_installer.plugins.rebuild()
+    
     dlg = ConfigureReloaderDialog(self.iface)
     dlg.exec_()
     if dlg.result():
