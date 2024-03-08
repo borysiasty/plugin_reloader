@@ -11,11 +11,12 @@
 [general]
 name=Plugin Reloader
 qgisMinimumVersion=3.0
+supportsQt6=True
 description=Reloads a chosen plugin in one click
 description[pl]=Przeładowuje wybraną wtyczkę jednym kliknięciem
 about=This tool is only useful for Python Plugin Developers!
 about[pl]=Narzędzie przydatne tylko dla autorów wtyczek!
-version=0.9.3
+version=0.9.4
 
 # Optional items:
 

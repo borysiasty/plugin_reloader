@@ -83,7 +83,7 @@ def handleExtraCommands(message_bar, translator):
         completed_process.stdout.decode('utf-8', 'replace'),
         Qgis.Info
       )
-    
+
     successExtraCommands = True
 
   except subprocess.CalledProcessError as exc:
@@ -92,7 +92,7 @@ def handleExtraCommands(message_bar, translator):
       Qgis.Warning
     )
     successExtraCommands = False
-      
+
   return successExtraCommands
 
 class ConfigureReloaderDialog (QDialog, Ui_ConfigureReloaderDialogBase):
@@ -133,7 +133,11 @@ class ReloaderPlugin():
     self.iface = iface
     self.toolButton = QToolButton()
     self.toolButton.setMenu(QMenu())
-    self.toolButton.setPopupMode(QToolButton.MenuButtonPopup)
+    try:
+      self.toolButton.setPopupMode(QToolButton.ToolButtonPopupMode.MenuButtonPopup)
+    except AttributeError:
+      # Just in case old (Py)Qt versions would not support it
+      self.toolButton.setPopupMode(QToolButton.MenuButtonPopup)
     self.toolBtnAction = self.iface.addToolBarWidget(self.toolButton)
 
     if QSettings().value('locale/overrideFlag', type=bool):
@@ -248,14 +252,14 @@ class ReloaderPlugin():
       loadPlugin(plugin)
       startPlugin(plugin)
       updateAvailablePlugins()
-    
+
     #give one chance for correct (not a loop)
     if plugin not in plugins:
       self.iface.messageBar().pushMessage(self.tr('Plugin <b>{}</b> not found.').format(plugin), Qgis.Warning, 0)
       self.configure()
       self.iface.messageBar().currentItem().dismiss()
       plugin = currentPlugin()
-    
+
     if plugin in plugins:
       state = self.iface.mainWindow().saveState()
 
@@ -265,7 +269,7 @@ class ReloaderPlugin():
           if hasattr(sys.modules[key], 'qCleanupResources'):
             sys.modules[key].qCleanupResources()
           del sys.modules[key]
-      
+
       # Reload plugin and check if it was successful.
       # Starting with QGIS 3.22, qgis.utils.reloadPlugin() returns True/False
       # but it returns nothing in prior versions. The function is
@@ -289,9 +293,9 @@ class ReloaderPlugin():
   def configure(self):
     if len(plugin_installer.plugins.all()) == 0:
       plugin_installer.plugins.rebuild()
-    
+
     dlg = ConfigureReloaderDialog(self.iface)
-    dlg.exec_()
+    dlg.exec()
     if dlg.result():
       plugin = dlg.comboPlugin.currentText()
       settings = QSettings()
