@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
  <author>Borys Jurgiel</author>
- <class>ConfigureReloaderDialogBase</class>
- <widget class="QDialog" name="ConfigureReloaderDialogBase">
+ <class>ConfigurationDialogBase</class>
+ <widget class="QDialog" name="ConfigurationDialogBase">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
     <width>500</width>
-    <height>257</height>
+    <height>288</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -168,7 +168,7 @@
   <connection>
    <sender>buttonBox</sender>
    <signal>accepted()</signal>
-   <receiver>ConfigureReloaderDialogBase</receiver>
+   <receiver>ConfigurationDialogBase</receiver>
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel">
@@ -184,7 +184,7 @@
   <connection>
    <sender>buttonBox</sender>
    <signal>rejected()</signal>
-   <receiver>ConfigureReloaderDialogBase</receiver>
+   <receiver>ConfigurationDialogBase</receiver>
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel">

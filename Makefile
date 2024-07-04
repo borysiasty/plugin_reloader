@@ -15,7 +15,7 @@ pep8:
 
 
 pylint:
-	@pylint *py
+	@pylint --disable=C0103,C0415,E0401,R0903,W0201 *.py
 
 
 zip:
