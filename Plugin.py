@@ -163,10 +163,9 @@ class Plugin:
                     check=True,
                 )
 
-                self.iface.messageBar().pushMessage(
-                    completed_process.stdout.decode('utf-8', 'replace'),
-                    Qgis.Info
-                )
+                message = completed_process.stdout.decode('utf-8', 'replace')
+                if message:
+                    self.iface.messageBar().pushMessage(message, Qgis.Info)
 
             successExtraCommands = True
 

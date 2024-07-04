@@ -42,14 +42,14 @@ class ConfigurationDialog(QDialog, FORM_CLASS):
         # Still doesn't work in every case. TODO?: try to load from scratch
         # the plugin saved in QSettings if doesn't exist
         plugin = Settings.currentPlugin()
-        qgis.uitils.updateAvailablePlugins()
+        qgis.utils.updateAvailablePlugins()
         # if plugin not in plugins:
         #   try:
         #       loadPlugin(plugin)
         #       startPlugin(plugin)
         #   except:
         #        pass
-        # qgis.uitils.updateAvailablePlugins()
+        # qgis.utils.updateAvailablePlugins()
 
         plugins_list = sorted(qgis.utils.plugins.keys())
         for plugin in plugins_list:
