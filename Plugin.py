@@ -204,22 +204,28 @@ class Plugin:
             return
 
         windowState = self.iface.mainWindow().saveState()
-
-        if Qgis.QGIS_VERSION_INT < 30408:
-            # Since QGIS 3.4.8, this is done by qgis.utils.unloadPlugin
-            # Unload submodules
-            for key in list(sys.modules.keys()):
-                if plugin in key:
-                    if hasattr(sys.modules[key], 'qCleanupResources'):
-                        sys.modules[key].qCleanupResources()
-                    del sys.modules[key]
-
         startTime = time()
-        pluginStarted = qgis.utils.reloadPlugin(plugin)
-        duration = int(round((time() - startTime) * 1000))
 
+        qgis.utils.unloadPlugin(plugin)
+
+        # Remove submodules left by qgis.utils.unloadPlugin
+        # NOTE Since QGIS 3.4.8, imported submodules are unloaded automagically
+        # by qgis.utils.unloadPlugin. However, parent packages that weren't
+        # directly imported, are not handled.
+        for key in list(sys.modules.keys()):
+            if plugin in key:
+                if hasattr(sys.modules[key], 'qCleanupResources'):
+                    sys.modules[key].qCleanupResources()
+                del sys.modules[key]
+
+        qgis.utils.loadPlugin(plugin)
+        pluginStarted = qgis.utils.startPlugin(plugin)
+
+        endTime = time()
         self.iface.mainWindow().restoreState(windowState)
+
         if pluginStarted and Settings.notificationsEnabled():
+            duration = int(round((endTime - startTime) * 1000))
             msg = self.tr('<b>{}</b> reloaded in {} ms.').format(plugin,
                                                                  duration)
             self.iface.messageBar().pushMessage(msg, Qgis.Success)
