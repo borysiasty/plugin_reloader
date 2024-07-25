@@ -15,11 +15,12 @@ import os
 import sys
 import subprocess
 from time import time
-from qgis.PyQt.QtCore import QCoreApplication, QLocale, QSettings, QTranslator
+from qgis.PyQt.QtCore import QCoreApplication, QLocale, QObject, QSettings, \
+    QTranslator
 from qgis.PyQt.QtGui import QIcon
 from qgis.PyQt.QtWidgets import QAction, QMenu, QToolButton
 
-from qgis.core import Qgis
+from qgis.core import Qgis, QgsMessageLog
 from qgis.gui import QgisInterface
 import qgis.utils
 from pyplugin_installer import installer as plugin_installer
@@ -146,6 +147,85 @@ class Plugin:
 
         self.iface.removeToolBarIcon(self.toolBtnAction)
 
+    def openConfigWindow(self):
+        """Open the configuration dialog."""
+        if len(plugin_installer.plugins.all()) == 0:
+            plugin_installer.plugins.rebuild()
+
+        dlg = ConfigurationDialog(self.iface)
+        dlg.exec()
+        if dlg.result():
+            plugin = dlg.comboPlugin.currentText()
+            self.actionRun.setToolTip(
+                self.tr('Reload plugin: {}').format(plugin))
+            self.actionRun.setText(
+                self.tr('Reload plugin: {}').format(plugin))
+            Settings.setCurrentPlugin(plugin)
+            Settings.setNotificationsEnabled(dlg.cbNotifications.isChecked())
+            Settings.setExtraCommandsEnabled(dlg.cbExtraCommands.isChecked())
+            Settings.setExtraCommands(dlg.pteExtraCommands.toPlainText())
+
+    def run(self):
+        """Reload the selected plugin."""
+        if len(plugin_installer.plugins.all()) == 0:
+            plugin_installer.plugins.rebuild()
+
+        if Settings.extraCommandsEnabled():
+            successExtraCommands = self.handleExtraCommands()
+            if not successExtraCommands:
+                return
+
+        plugin = Settings.currentPlugin()
+
+        # Udate the plugin list first! The plugin could be removed
+        # from the list if was temporarily broken.
+        qgis.utils.updateAvailablePlugins()
+
+        # Try to initially load the selected plugin if not loaded yet
+        if plugin not in qgis.utils.plugins and plugin != "":
+            qgis.utils.loadPlugin(plugin)
+            qgis.utils.startPlugin(plugin)
+            qgis.utils.updateAvailablePlugins()
+
+        # Select another plugin if the old one is unavailable
+        if plugin not in qgis.utils.plugins:
+            self.iface.messageBar().pushMessage(
+                self.tr('Plugin <b>{}</b> not found.').format(plugin),
+                Qgis.Warning, 0)
+            self.openConfigWindow()
+            self.iface.messageBar().currentItem().dismiss()
+            plugin = Settings.currentPlugin()
+
+        self.reloadPlugin(plugin)
+
+    def reloadPlugin(self, plugin: str):
+        """Reload plugin with submodules and check if it was successful."""
+        if plugin not in qgis.utils.plugins:
+            return
+
+        windowState = self.iface.mainWindow().saveState()
+
+        if Qgis.QGIS_VERSION_INT < 30408:
+            # Since QGIS 3.4.8, this is done by qgis.utils.unloadPlugin
+            # Unload submodules
+            for key in list(sys.modules.keys()):
+                if plugin in key:
+                    if hasattr(sys.modules[key], 'qCleanupResources'):
+                        sys.modules[key].qCleanupResources()
+                    del sys.modules[key]
+
+        startTime = time()
+        pluginStarted = qgis.utils.reloadPlugin(plugin)
+        duration = int(round((time() - startTime) * 1000))
+
+        self.iface.mainWindow().restoreState(windowState)
+        if pluginStarted and Settings.notificationsEnabled():
+            msg = self.tr('<b>{}</b> reloaded in {} ms.').format(plugin,
+                                                                 duration)
+            self.iface.messageBar().pushMessage(msg, Qgis.Success)
+            pluginsLogTabName = QObject().tr("Plugins")
+            QgsMessageLog.logMessage(msg, pluginsLogTabName, level=Qgis.Info)
+
     def handleExtraCommands(self) -> bool:
         """Execute extra CLI commands prior to the plugin reload."""
         try:
@@ -178,84 +258,3 @@ class Plugin:
             successExtraCommands = False
 
         return successExtraCommands
-
-    def run(self):
-        """Reload the selected plugin."""
-        if len(plugin_installer.plugins.all()) == 0:
-            plugin_installer.plugins.rebuild()
-
-        if Settings.extraCommandsEnabled():
-            successExtraCommands = self.handleExtraCommands()
-            if not successExtraCommands:
-                return
-
-        plugin = Settings.currentPlugin()
-
-        # Udate the plugin list first! The plugin could be removed
-        # from the list if was temporarily broken.
-        qgis.utils.updateAvailablePlugins()
-
-        # Try to load from scratch the plugin saved in QSettings if not loaded
-        if plugin not in qgis.utils.plugins and plugin != "":
-            qgis.utils.loadPlugin(plugin)
-            qgis.utils.startPlugin(plugin)
-            qgis.utils.updateAvailablePlugins()
-
-        # Give one chance for correct (not a loop)
-        if plugin not in qgis.utils.plugins:
-            self.iface.messageBar().pushMessage(
-                self.tr('Plugin <b>{}</b> not found.').format(plugin),
-                Qgis.Warning, 0)
-            self.openConfigWindow()
-            self.iface.messageBar().currentItem().dismiss()
-            plugin = Settings.currentPlugin()
-
-        if plugin in qgis.utils.plugins:
-            state = self.iface.mainWindow().saveState()
-
-            # Unload submodules
-            for key in list(sys.modules.keys()):
-                if plugin in key:
-                    if hasattr(sys.modules[key], 'qCleanupResources'):
-                        sys.modules[key].qCleanupResources()
-                    del sys.modules[key]
-
-            # Reload plugin and check if it was successful.
-            # Starting with QGIS 3.22, qgis.utils.reloadPlugin() returns bool
-            # but it returns nothing in prior versions. The function is
-            # thus replicated for compatibility.
-            startTime = time()
-            qgis.utils.unloadPlugin(plugin)
-            qgis.utils.loadPlugin(plugin)
-            pluginStarted = qgis.utils.startPlugin(plugin)
-            endTime = time()
-
-            self.iface.mainWindow().restoreState(state)
-            if Settings.notificationsEnabled() and pluginStarted:
-                # Not sure if we're more interested in the total time
-                # (a developer's business) or just qgis.utils.reloadPlugin
-                # (to see how much a huge plugin slows down the QGIS start).
-                duration = int(round((endTime - startTime) * 1000))
-                self.iface.messageBar().pushMessage(
-                    self.tr('<b>{}</b> reloaded in {} ms.').format(plugin,
-                                                                   duration),
-                    Qgis.Success
-                )
-
-    def openConfigWindow(self):
-        """Open the configuration dialog."""
-        if len(plugin_installer.plugins.all()) == 0:
-            plugin_installer.plugins.rebuild()
-
-        dlg = ConfigurationDialog(self.iface)
-        dlg.exec()
-        if dlg.result():
-            plugin = dlg.comboPlugin.currentText()
-            self.actionRun.setToolTip(
-                self.tr('Reload plugin: {}').format(plugin))
-            self.actionRun.setText(
-                self.tr('Reload plugin: {}').format(plugin))
-            Settings.setCurrentPlugin(plugin)
-            Settings.setNotificationsEnabled(dlg.cbNotifications.isChecked())
-            Settings.setExtraCommandsEnabled(dlg.cbExtraCommands.isChecked())
-            Settings.setExtraCommands(dlg.pteExtraCommands.toPlainText())

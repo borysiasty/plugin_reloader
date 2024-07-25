@@ -1,6 +1,6 @@
-FORMS = ../configurereloaderbase.ui
+FORMS = ../ConfigurationDialogBase.ui
 
-SOURCES = ../reloader_plugin.py
+SOURCES = ../Plugin.py
 
-TRANSLATIONS = plugin_reloader_pl.ts plugin_reloader_de.ts plugin_reloader_fr.ts
+TRANSLATIONS = plugin_reloader_pl.ts plugin_reloader_de.ts plugin_reloader_fr.ts plugin_reloader_it.ts
 
