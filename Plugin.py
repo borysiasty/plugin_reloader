@@ -58,7 +58,7 @@ class Plugin:
 
     def tr(self, message: str) -> str:
         """Translate a string."""
-        return QCoreApplication.translate('ReloaderPlugin', message)
+        return QCoreApplication.translate('Plugin', message)
 
     def theBestShortcutForPluginReload(self):
         """Try to find the best saved setting.
@@ -229,7 +229,12 @@ class Plugin:
             msg = self.tr('<b>{}</b> reloaded in {} ms.').format(plugin,
                                                                  duration)
             self.iface.messageBar().pushMessage(msg, Qgis.Success)
-            pluginsLogTabName = QObject().tr("Plugins")
+            # Actual name of the "Plugins" tab in the message log panel
+            # is localized, so we need to find it in QGIS' translations.
+            # Don't pass the string value directly to QObject().tr()
+            # to prevent local pylupdate from catching it.
+            pluginsLogTabSourceName = "Plugins"
+            pluginsLogTabName = QObject().tr(pluginsLogTabSourceName)
             QgsMessageLog.logMessage(msg, pluginsLogTabName, level=Qgis.Info)
 
     def handleExtraCommands(self) -> bool:

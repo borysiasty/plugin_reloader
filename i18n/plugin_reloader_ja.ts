@@ -2,14 +2,6 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="ja_JP">
 <context>
-    <name>@default</name>
-    <message>
-        <location filename="../Plugin.py" line="232"/>
-        <source>Plugins</source>
-        <translation>プラグイン</translation>
-    </message>
-</context>
-<context>
     <name>ConfigurationDialogBase</name>
     <message>
         <location filename="../ConfigurationDialogBase.ui" line="30"/>
@@ -92,7 +84,7 @@
         <translation>&lt;b&gt;{}&lt;/b&gt; は {} ms でリロードされました。</translation>
     </message>
     <message>
-        <location filename="../Plugin.py" line="259"/>
+        <location filename="../Plugin.py" line="264"/>
         <source>Could not execute extra commands: {}</source>
         <translation>追加コマンドを実行できませんした: {}</translation>
     </message>
