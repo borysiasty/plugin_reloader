@@ -20,18 +20,36 @@ class Settings():
     PREFIX = '/PluginReloader'
     """QSettings branch used by the plugin"""
 
-    @classmethod
-    def currentPlugin(cls) -> str:
-        """Plugin to be reloaded, The.
+    DEFAULT_RECENT_PLUGINS_COUNT = 5
 
-        NOTE: Pylint doesn't allow to start method docstrings with 'the' ;)
+    @classmethod
+    def recentPlugins(cls, listAll: bool = False) -> list[str]:
+        """Recently used plugins. The most recent first.
+
+        :param listAll: List all stored plugins instead of cropping
+                        to the currently configured number.
         """
-        return QSettings().value(f'{cls.PREFIX}/plugin', '', type=str)
+        if plugins := QSettings().value(f'{cls.PREFIX}/recentPlugins', '',
+                                        type=str):
+            plugins = [plugin.strip() for plugin in plugins]
+        else:
+            # Fallback to the old setting
+            currentPlugin = QSettings().value(f'{cls.PREFIX}/plugin', type=str)
+            plugins = [currentPlugin] if currentPlugin else []
+
+        if not listAll:
+            plugins = plugins[:cls.recentPluginsCount()]
+        return plugins
 
     @classmethod
-    def setCurrentPlugin(cls, plugin: str):
-        """Set the plugin to be reloaded."""
-        QSettings().setValue(f'{cls.PREFIX}/plugin', plugin)
+    def updateRecentPlugins(cls, recentPlugin: str):
+        """Set the recently reloaded plugin list. The most recent first."""
+        plugins = cls.recentPlugins()
+        if recentPlugin in plugins:
+            plugins.remove(recentPlugin)
+        plugins = [recentPlugin] + plugins
+        plugins = plugins[:cls.recentPluginsCount()]
+        QSettings().setValue(f'{cls.PREFIX}/recentPlugins', plugins)
 
     @classmethod
     def notificationsEnabled(cls) -> bool:
@@ -63,3 +81,15 @@ class Settings():
     def setExtraCommands(cls, commands: str):
         """Set CLI commands to be executed prior to the plugin reload."""
         QSettings().setValue(f'{cls.PREFIX}/extraCommands', commands)
+
+    @classmethod
+    def recentPluginsCount(cls) -> int:
+        """Get the number of recent plugins to display in the menu."""
+        return QSettings().value(f'{cls.PREFIX}/recentPluginsCount',
+                                 cls.DEFAULT_RECENT_PLUGINS_COUNT,
+                                 type=int)
+
+    @classmethod
+    def setRecentPluginsCount(cls, count: int):
+        """Set number of recent plugins to display in the menu."""
+        QSettings().setValue(f'{cls.PREFIX}/recentPluginsCount', count)

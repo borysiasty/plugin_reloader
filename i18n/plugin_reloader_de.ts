@@ -19,7 +19,7 @@
         <translation>Benachrichtigung anzeigen, sobald das Plugin neu geladen wurde</translation>
     </message>
     <message>
-        <location filename="../ConfigurationDialogBase.ui" line="115"/>
+        <location filename="../ConfigurationDialogBase.ui" line="161"/>
         <source>Select &amp;the plugin you want to reload</source>
         <translation>Selek&amp;tion des neu zu ladenden Plugins</translation>
     </message>
@@ -29,7 +29,7 @@
         <translation type="obsolete">Befehle, die vor dem Neuladen ausgeführt werden sollen</translation>
     </message>
     <message>
-        <location filename="../ConfigurationDialogBase.ui" line="131"/>
+        <location filename="../ConfigurationDialogBase.ui" line="177"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;QGIS will try to execute any commands typed here in a shell before reloading the plugin.&lt;/p&gt;
 &lt;p&gt;This can be useful, for example, if you need to copy the new source code into the QGIS plugins directory.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;QGIS wird versuchen, alle hier eingegebenen Befehle in einer Shell auszuführen, bevor das Plugin neu geladen wird.&lt;/p&gt;
@@ -46,40 +46,52 @@
         <translation>Bemerkung: %PluginName% wird ersetzt durch den Plugin Namen.</translation>
     </message>
     <message>
-        <location filename="../ConfigurationDialogBase.ui" line="135"/>
+        <location filename="../ConfigurationDialogBase.ui" line="181"/>
         <source>Run the commands below before reloading</source>
         <translation>Befehle, die vor dem Neuladen ausgeführt werden sollen</translation>
+    </message>
+    <message>
+        <location filename="../ConfigurationDialogBase.ui" line="104"/>
+        <source>Number of recent plugins in the menu</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../ConfigurationDialogBase.ui" line="208"/>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;color:red&quot;&gt;
+This section is deprecated. Use the new drop-down menu in the toolbar instead.
+&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>Plugin</name>
     <message>
-        <location filename="../Plugin.py" line="79"/>
+        <location filename="../Plugin.py" line="84"/>
         <source>Reload plugin: </source>
         <translation>Plugin neu laden: </translation>
     </message>
     <message>
-        <location filename="../Plugin.py" line="114"/>
+        <location filename="../Plugin.py" line="86"/>
         <source>Reload chosen plugin</source>
         <translation>Ausgewähltes Plugin neu laden</translation>
     </message>
     <message>
-        <location filename="../Plugin.py" line="161"/>
+        <location filename="../Plugin.py" line="183"/>
         <source>Reload plugin: {}</source>
         <translation>Plugin neu laden: {}</translation>
     </message>
     <message>
-        <location filename="../Plugin.py" line="144"/>
+        <location filename="../Plugin.py" line="221"/>
         <source>&amp;Plugin Reloader</source>
         <translation>&amp;Plugin-Reloader</translation>
     </message>
     <message>
-        <location filename="../Plugin.py" line="128"/>
+        <location filename="../Plugin.py" line="133"/>
         <source>Configure</source>
         <translation>Konfigurieren</translation>
     </message>
     <message>
-        <location filename="../Plugin.py" line="134"/>
+        <location filename="../Plugin.py" line="138"/>
         <source>Choose a plugin to be reloaded</source>
         <translation>Wählen Sie ein Plugin aus, das neu geladen werden soll</translation>
     </message>
@@ -89,19 +101,42 @@
         <translation type="obsolete">&lt;b&gt;{}&lt;/b&gt; neu geladen.</translation>
     </message>
     <message>
-        <location filename="../Plugin.py" line="192"/>
+        <location filename="../Plugin.py" line="247"/>
         <source>Plugin &lt;b&gt;{}&lt;/b&gt; not found.</source>
         <translation>Plugin &lt;b&gt;{}&lt;/b&gt; nicht gefunden.</translation>
     </message>
     <message>
-        <location filename="../Plugin.py" line="229"/>
+        <location filename="../Plugin.py" line="284"/>
         <source>&lt;b&gt;{}&lt;/b&gt; reloaded in {} ms.</source>
         <translation>&lt;b&gt;{}&lt;/b&gt; neu geladen in {} ms.</translation>
     </message>
     <message>
-        <location filename="../Plugin.py" line="264"/>
+        <location filename="../Plugin.py" line="319"/>
         <source>Could not execute extra commands: {}</source>
         <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Plugin.py" line="121"/>
+        <source>Reload a plugin...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Plugin.py" line="147"/>
+        <source>Plugin Reloader</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>PluginSelectionDialogBase</name>
+    <message>
+        <location filename="../PluginSelectionDialogBase.ui" line="30"/>
+        <source>Reload a plugin</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../PluginSelectionDialogBase.ui" line="52"/>
+        <source>Select &amp;the plugin you want to reload</source>
+        <translation type="unfinished">Selek&amp;tion des neu zu ladenden Plugins</translation>
     </message>
 </context>
 </TS>

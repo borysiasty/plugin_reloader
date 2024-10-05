@@ -19,7 +19,7 @@
         <translation>Afficher une notification une fois l'extension rechargée</translation>
     </message>
     <message>
-        <location filename="../ConfigurationDialogBase.ui" line="131"/>
+        <location filename="../ConfigurationDialogBase.ui" line="177"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;QGIS will try to execute any commands typed here in a shell before reloading the plugin.&lt;/p&gt;
 &lt;p&gt;This can be useful, for example, if you need to copy the new source code into the QGIS plugins directory.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;QGIS exécutera dans une interface système (shell) toute commandes inscrite ici avant de recharger l'extension.&lt;/p&gt;
@@ -31,62 +31,97 @@
         <translation>Note: tout %PluginName% sera remplacé par le nom de l'extension.</translation>
     </message>
     <message>
-        <location filename="../ConfigurationDialogBase.ui" line="115"/>
+        <location filename="../ConfigurationDialogBase.ui" line="161"/>
         <source>Select &amp;the plugin you want to reload</source>
         <translation>Sélec&amp;tionnez l'extension à recharger</translation>
     </message>
     <message>
-        <location filename="../ConfigurationDialogBase.ui" line="135"/>
+        <location filename="../ConfigurationDialogBase.ui" line="181"/>
         <source>Run the commands below before reloading</source>
         <translation>Exécuter les commandes ci-dessous avant le rechargement</translation>
+    </message>
+    <message>
+        <location filename="../ConfigurationDialogBase.ui" line="104"/>
+        <source>Number of recent plugins in the menu</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../ConfigurationDialogBase.ui" line="208"/>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;color:red&quot;&gt;
+This section is deprecated. Use the new drop-down menu in the toolbar instead.
+&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>Plugin</name>
     <message>
-        <location filename="../Plugin.py" line="79"/>
+        <location filename="../Plugin.py" line="84"/>
         <source>Reload plugin: </source>
         <translation>Recharger l'extension: </translation>
     </message>
     <message>
-        <location filename="../Plugin.py" line="114"/>
+        <location filename="../Plugin.py" line="86"/>
         <source>Reload chosen plugin</source>
         <translation>Recharger l'extension sélectionnée</translation>
     </message>
     <message>
-        <location filename="../Plugin.py" line="161"/>
+        <location filename="../Plugin.py" line="183"/>
         <source>Reload plugin: {}</source>
         <translation>Recharger l'extension: {}</translation>
     </message>
     <message>
-        <location filename="../Plugin.py" line="144"/>
+        <location filename="../Plugin.py" line="221"/>
         <source>&amp;Plugin Reloader</source>
         <translation>&amp;Plugin Reloader</translation>
     </message>
     <message>
-        <location filename="../Plugin.py" line="128"/>
+        <location filename="../Plugin.py" line="133"/>
         <source>Configure</source>
         <translation>Configurer</translation>
     </message>
     <message>
-        <location filename="../Plugin.py" line="134"/>
+        <location filename="../Plugin.py" line="138"/>
         <source>Choose a plugin to be reloaded</source>
         <translation>Sélectionnez une extension à recharger</translation>
     </message>
     <message>
-        <location filename="../Plugin.py" line="192"/>
+        <location filename="../Plugin.py" line="247"/>
         <source>Plugin &lt;b&gt;{}&lt;/b&gt; not found.</source>
         <translation>Extension &lt;b&gt;{}&lt;/b&gt; introuvable.</translation>
     </message>
     <message>
-        <location filename="../Plugin.py" line="229"/>
+        <location filename="../Plugin.py" line="284"/>
         <source>&lt;b&gt;{}&lt;/b&gt; reloaded in {} ms.</source>
         <translation>&lt;b&gt;{}&lt;/b&gt; rechargé en {} ms.</translation>
     </message>
     <message>
-        <location filename="../Plugin.py" line="264"/>
+        <location filename="../Plugin.py" line="319"/>
         <source>Could not execute extra commands: {}</source>
         <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Plugin.py" line="121"/>
+        <source>Reload a plugin...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Plugin.py" line="147"/>
+        <source>Plugin Reloader</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>PluginSelectionDialogBase</name>
+    <message>
+        <location filename="../PluginSelectionDialogBase.ui" line="30"/>
+        <source>Reload a plugin</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../PluginSelectionDialogBase.ui" line="52"/>
+        <source>Select &amp;the plugin you want to reload</source>
+        <translation type="unfinished">Sélec&amp;tionnez l'extension à recharger</translation>
     </message>
 </context>
 </TS>

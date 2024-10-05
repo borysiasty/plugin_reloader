@@ -14,12 +14,12 @@
         <translation>Wyświetlaj powiadomienie o przeładowaniu wtyczki</translation>
     </message>
     <message>
-        <location filename="../ConfigurationDialogBase.ui" line="115"/>
+        <location filename="../ConfigurationDialogBase.ui" line="161"/>
         <source>Select &amp;the plugin you want to reload</source>
         <translation>Wybierz &amp;wtyczkę do przeładowania</translation>
     </message>
     <message>
-        <location filename="../ConfigurationDialogBase.ui" line="131"/>
+        <location filename="../ConfigurationDialogBase.ui" line="177"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;QGIS will try to execute any commands typed here in a shell before reloading the plugin.&lt;/p&gt;
 &lt;p&gt;This can be useful, for example, if you need to copy the new source code into the QGIS plugins directory.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Wprowadź komendy wiersza poleceń, które mają być wykonane przed przeładowaniem wtyczki.&lt;/p&gt;
@@ -36,57 +36,103 @@
         <translation>Możesz użyć zmiennej %PluginName% zamiast nazwy wtyczki.</translation>
     </message>
     <message>
-        <location filename="../ConfigurationDialogBase.ui" line="135"/>
+        <location filename="../ConfigurationDialogBase.ui" line="181"/>
         <source>Run the commands below before reloading</source>
         <translation>Uruchom poniższe polecenia przed przeładowaniem</translation>
+    </message>
+    <message>
+        <location filename="../ConfigurationDialogBase.ui" line="178"/>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;color:red&quot;&gt;
+This section is deprecated and will be removed soon. Use the new drop-down menu in the toolbar instead.
+&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation type="obsolete">&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;color:red&quot;&gt;
+Ta sekcja będzie niedługo usunięta. Wybieraj wtyczki z nowego rozwilalnego menu w pasku narzędzi.
+&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+    </message>
+    <message>
+        <location filename="../ConfigurationDialogBase.ui" line="104"/>
+        <source>Number of recent plugins in the menu</source>
+        <translation>Liczba ostatnio przeładowanych wtyczek w menu</translation>
+    </message>
+    <message>
+        <location filename="../ConfigurationDialogBase.ui" line="208"/>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;color:red&quot;&gt;
+This section is deprecated. Use the new drop-down menu in the toolbar instead.
+&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;color:red&quot;&gt;
+Ta sekcja została wyłączona. Wybieraj wtyczki z nowego rozwijalnego menu w pasku narzędzi.
+&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
 </context>
 <context>
     <name>Plugin</name>
     <message>
-        <location filename="../Plugin.py" line="79"/>
+        <location filename="../Plugin.py" line="84"/>
         <source>Reload plugin: </source>
         <translation>Przeładuj wtyczkę: </translation>
     </message>
     <message>
-        <location filename="../Plugin.py" line="114"/>
+        <location filename="../Plugin.py" line="86"/>
         <source>Reload chosen plugin</source>
         <translation>Przeładuj wybraną wtyczkę</translation>
     </message>
     <message>
-        <location filename="../Plugin.py" line="161"/>
+        <location filename="../Plugin.py" line="183"/>
         <source>Reload plugin: {}</source>
         <translation>Przeładuj wtyczkę: {}</translation>
     </message>
     <message>
-        <location filename="../Plugin.py" line="144"/>
+        <location filename="../Plugin.py" line="221"/>
         <source>&amp;Plugin Reloader</source>
         <translation>&amp;Plugin Reloader</translation>
     </message>
     <message>
-        <location filename="../Plugin.py" line="128"/>
+        <location filename="../Plugin.py" line="133"/>
         <source>Configure</source>
         <translation>Ustawienia</translation>
     </message>
     <message>
-        <location filename="../Plugin.py" line="134"/>
+        <location filename="../Plugin.py" line="138"/>
         <source>Choose a plugin to be reloaded</source>
         <translation>Wybierz wtyczkę do przeładowania</translation>
     </message>
     <message>
-        <location filename="../Plugin.py" line="192"/>
+        <location filename="../Plugin.py" line="247"/>
         <source>Plugin &lt;b&gt;{}&lt;/b&gt; not found.</source>
         <translation>Nie znaleziono wtyczki &lt;b&gt;{}&lt;/b&gt;.</translation>
     </message>
     <message>
-        <location filename="../Plugin.py" line="229"/>
+        <location filename="../Plugin.py" line="284"/>
         <source>&lt;b&gt;{}&lt;/b&gt; reloaded in {} ms.</source>
         <translation>Wtyczka &lt;b&gt;{}&lt;/b&gt; przeładowana w {} ms.</translation>
     </message>
     <message>
-        <location filename="../Plugin.py" line="264"/>
+        <location filename="../Plugin.py" line="319"/>
         <source>Could not execute extra commands: {}</source>
         <translation>Nie mogę uruchomić polecenia przed przeładowaniem: {}</translation>
+    </message>
+    <message>
+        <location filename="../Plugin.py" line="121"/>
+        <source>Reload a plugin...</source>
+        <translation>Przeładuj wtyczkę...</translation>
+    </message>
+    <message>
+        <location filename="../Plugin.py" line="147"/>
+        <source>Plugin Reloader</source>
+        <translation>Plugin Reloader</translation>
+    </message>
+</context>
+<context>
+    <name>PluginSelectionDialogBase</name>
+    <message>
+        <location filename="../PluginSelectionDialogBase.ui" line="30"/>
+        <source>Reload a plugin</source>
+        <translation>Przeładuj wtyczkę</translation>
+    </message>
+    <message>
+        <location filename="../PluginSelectionDialogBase.ui" line="52"/>
+        <source>Select &amp;the plugin you want to reload</source>
+        <translation>Wybierz &amp;wtyczkę do przeładowania</translation>
     </message>
 </context>
 </TS>
