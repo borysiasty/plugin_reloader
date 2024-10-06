@@ -146,7 +146,8 @@ class Plugin:
 
         self.toolButton = QToolButton()
         self.toolButton.setMenu(QMenu())
-        self.toolButton.setToolButtonStyle(Qt.ToolButtonTextBesideIcon)
+        self.toolButton.setToolButtonStyle(
+            Qt.ToolButtonStyle.ToolButtonTextBesideIcon)
         self.toolButton.setPopupMode(
             QToolButton.ToolButtonPopupMode.MenuButtonPopup)
 
