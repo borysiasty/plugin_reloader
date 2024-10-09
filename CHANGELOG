@@ -1,3 +1,6 @@
+0.16
+Fix toolbar icon
+
 0.15
 Make toolbar button text optional.
 Simplify keyboard shortcut management by keeping the default action constant.

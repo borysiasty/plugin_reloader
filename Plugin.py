@@ -63,38 +63,9 @@ class Plugin:
             self.translator.load(locale_path)
             QCoreApplication.installTranslator(self.translator)
 
-        self.iface.initializationCompleted.connect(self.updatePluginIcons)
-
     def tr(self, message: str) -> str:
         """Translate a string."""
         return QCoreApplication.translate('Plugin', message)
-
-    def actionsForRecentPlugins(self) -> list[QAction]:
-        """Return list of actions for recently reloaded plugins."""
-        actions = [a for a in self.actionForPlugin.values()
-                   if a != self.actionAddNewPlugin]
-        return actions
-
-    def updateDefaultAction(self, plugin: str):
-        """Update the tool button's icon, tooltip, signal and displayed text, \
-        while keeping the action name constant due to registered shortuct.
-
-        NOTE: Since QGIS 3.32 keyboard shortcuts are registered by objectName
-        and not the action text, so it can be simplified some day.
-        """
-        self.actionReloadRecentPlugin.setIcon(
-            self.iconForPlugin(plugin, withOverlay=True))
-
-        text = self.actionForPlugin[plugin].text()
-        toolTipText = text
-        shortcutText = self.actionReloadRecentPlugin.shortcut().toString()
-        if shortcutText and shortcutText not in toolTipText:
-            toolTipText = f"{toolTipText} ({shortcutText})"
-        self.actionReloadRecentPlugin.setToolTip(toolTipText)
-        run = partial(self.run, plugin)
-        self.actionReloadRecentPlugin.disconnect()
-        self.actionReloadRecentPlugin.triggered.connect(run)
-        self.toolButton.setText(text)
 
     def initGui(self):
         """Add actions to the QGIS menu and toolbar."""
@@ -164,6 +135,55 @@ class Plugin:
 
         self.iface.addToolBarWidget(self.toolButton)
 
+        self.iface.initializationCompleted.connect(self.updatePluginIcons)
+
+    def unload(self):
+        """Remove the plugin's actions from the QGIS menu and toolbars."""
+        if not self.menu:
+            # The initGui() method was never called
+            return
+
+        self.iface.unregisterMainWindowAction(self.actionReloadRecentPlugin)
+        self.iface.pluginMenu().removeAction(self.menu.menuAction())
+        self.toolButton.deleteLater()
+
+    def createActionForPlugin(self, plugin: str) -> QAction:
+        """Create reloading action for a given plugin."""
+        icon = self.iconForPlugin(plugin)
+        actionName = self.tr("Reload plugin: {}").format(plugin)
+        action = QAction(icon, actionName)
+        action.setToolTip(actionName)
+        run = partial(self.run, plugin)
+        action.triggered.connect(run)
+        return action
+
+    def actionsForRecentPlugins(self) -> list[QAction]:
+        """Return list of actions for recently reloaded plugins."""
+        actions = [a for a in self.actionForPlugin.values()
+                   if a != self.actionAddNewPlugin]
+        return actions
+
+    def updateDefaultAction(self, plugin: str):
+        """Update the tool button's icon, tooltip, signal and displayed text, \
+        while keeping the action name constant due to registered shortuct.
+
+        NOTE: Since QGIS 3.32 keyboard shortcuts are registered by objectName
+        and not the action text, so it can be simplified some day.
+        """
+        self.actionReloadRecentPlugin.setIcon(
+            self.iconForPlugin(plugin, withOverlay=True))
+
+        text = self.actionForPlugin[plugin].text()
+        toolTipText = text
+        shortcutText = self.actionReloadRecentPlugin.shortcut().toString()
+        if shortcutText and shortcutText not in toolTipText:
+            toolTipText = f"{toolTipText} ({shortcutText})"
+        self.actionReloadRecentPlugin.setToolTip(toolTipText)
+        run = partial(self.run, plugin)
+        self.actionReloadRecentPlugin.disconnect()
+        self.actionReloadRecentPlugin.triggered.connect(run)
+        self.toolButton.setText(text)
+
     def iconForPlugin(self, plugin: str, withOverlay: bool = False) -> QIcon:
         """Return plugin icon.
 
@@ -203,25 +223,9 @@ class Plugin:
                 icon = self.iconForPlugin(plugin)
                 action.setIcon(icon)
 
-    def unload(self):
-        """Remove the plugin's actions from the QGIS menu and toolbars."""
-        if not self.menu:
-            # The initGui() method was never called
-            return
-
-        self.iface.unregisterMainWindowAction(self.actionReloadRecentPlugin)
-        self.iface.pluginMenu().removeAction(self.menu.menuAction())
-        self.toolButton.deleteLater()
-
-    def createActionForPlugin(self, plugin: str) -> QAction:
-        """Create reloading action for a given plugin."""
-        icon = self.iconForPlugin(plugin)
-        actionName = self.tr("Reload plugin: {}").format(plugin)
-        action = QAction(icon, actionName)
-        action.setToolTip(actionName)
-        run = partial(self.run, plugin)
-        action.triggered.connect(run)
-        return action
+        recentPlugin = list(self.actionForPlugin.keys())[0]
+        icon = self.iconForPlugin(recentPlugin, withOverlay=True)
+        self.actionReloadRecentPlugin.setIcon(icon)
 
     def choosePluginToReload(self) -> Optional[str]:
         """Open the plugin selection dialog and return choosen plugin."""
