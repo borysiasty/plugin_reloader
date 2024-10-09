@@ -33,20 +33,7 @@
    <string/>
   </property>
   <layout class="QGridLayout" name="gridLayout">
-   <item row="12" column="0">
-    <widget class="QDialogButtonBox" name="buttonBox">
-     <property name="focusPolicy">
-      <enum>Qt::NoFocus</enum>
-     </property>
-     <property name="standardButtons">
-      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
-     </property>
-     <property name="centerButtons">
-      <bool>true</bool>
-     </property>
-    </widget>
-   </item>
-   <item row="6" column="0">
+   <item row="7" column="0">
     <layout class="QGridLayout" name="gridLayout_2">
      <property name="bottomMargin">
       <number>6</number>
@@ -93,23 +80,6 @@
      </item>
     </layout>
    </item>
-   <item row="4" column="0">
-    <widget class="QCheckBox" name="cbExtraCommands">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <property name="toolTip">
-      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;QGIS will try to execute any commands typed here in a shell before reloading the plugin.&lt;/p&gt;
-&lt;p&gt;This can be useful, for example, if you need to copy the new source code into the QGIS plugins directory.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-     </property>
-     <property name="text">
-      <string>Run the commands below before reloading</string>
-     </property>
-    </widget>
-   </item>
    <item row="1" column="0">
     <widget class="QGroupBox" name="groupBox">
      <property name="title">
@@ -153,6 +123,35 @@ This section is deprecated. Use the new drop-down menu in the toolbar instead.
      </layout>
     </widget>
    </item>
+   <item row="13" column="0">
+    <widget class="QDialogButtonBox" name="buttonBox">
+     <property name="focusPolicy">
+      <enum>Qt::NoFocus</enum>
+     </property>
+     <property name="standardButtons">
+      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+     </property>
+     <property name="centerButtons">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
+   <item row="4" column="0">
+    <widget class="QCheckBox" name="cbNotifications">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="toolTip">
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Push a notification about the successful reload to the QGIS message bar.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Check this&lt;/span&gt;, if you like to be sure you reloaded the right plugin.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Uncheck this&lt;/span&gt;, if you hate trivial notifications covering error messages from the plugin.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     </property>
+     <property name="text">
+      <string>Display a notification once the plugin is reloaded</string>
+     </property>
+    </widget>
+   </item>
    <item row="2" column="0">
     <layout class="QHBoxLayout" name="horizontalLayout">
      <item>
@@ -162,6 +161,9 @@ This section is deprecated. Use the new drop-down menu in the toolbar instead.
          <horstretch>0</horstretch>
          <verstretch>0</verstretch>
         </sizepolicy>
+       </property>
+       <property name="toolTip">
+        <string>Maximum number of entries in the drop-down menu</string>
        </property>
        <property name="text">
         <string>Number of recent plugins in the menu</string>
@@ -183,8 +185,8 @@ This section is deprecated. Use the new drop-down menu in the toolbar instead.
      </item>
     </layout>
    </item>
-   <item row="3" column="0">
-    <widget class="QCheckBox" name="cbNotifications">
+   <item row="5" column="0">
+    <widget class="QCheckBox" name="cbExtraCommands">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
        <horstretch>0</horstretch>
@@ -192,10 +194,21 @@ This section is deprecated. Use the new drop-down menu in the toolbar instead.
       </sizepolicy>
      </property>
      <property name="toolTip">
-      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Push a notification about the successful reload to the QGIS message bar.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Check this&lt;/span&gt;, if you like to be sure you reloaded the right plugin.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Uncheck this&lt;/span&gt;, if you hate trivial notifications covering error messages from the plugin.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;QGIS will try to execute any commands typed here in a shell before reloading the plugin.&lt;/p&gt;
+&lt;p&gt;This can be useful, for example, if you need to copy the new source code into the QGIS plugins directory.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
      </property>
      <property name="text">
-      <string>Display a notification once the plugin is reloaded</string>
+      <string>Run the commands below before reloading</string>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="0">
+    <widget class="QCheckBox" name="cbToolButtonText">
+     <property name="toolTip">
+      <string>Display description with the current plugin name beside the icon in the Plugin toolbar.</string>
+     </property>
+     <property name="text">
+      <string>Display the plugin name in the toolbar</string>
      </property>
     </widget>
    </item>
@@ -204,6 +217,7 @@ This section is deprecated. Use the new drop-down menu in the toolbar instead.
  <tabstops>
   <tabstop>comboPlugin</tabstop>
   <tabstop>sbRecentPluginsCount</tabstop>
+  <tabstop>cbToolButtonText</tabstop>
   <tabstop>cbNotifications</tabstop>
   <tabstop>cbExtraCommands</tabstop>
   <tabstop>pteExtraCommands</tabstop>

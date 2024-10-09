@@ -18,10 +18,10 @@ from functools import partial
 from pathlib import Path
 from time import time
 from typing import Optional
-from qgis.PyQt.QtCore import Qt, QCoreApplication, QLocale, QObject, \
+from qgis.PyQt.QtCore import QCoreApplication, QLocale, QObject, \
     QSettings, QTranslator
 from qgis.PyQt.QtGui import QIcon, QPixmap
-from qgis.PyQt.QtWidgets import QAction, QMenu, QLabel, QToolButton
+from qgis.PyQt.QtWidgets import QAction, QLabel, QMenu, QToolButton
 
 from qgis.core import Qgis, QgsMessageLog
 from qgis.gui import QgisInterface
@@ -146,8 +146,7 @@ class Plugin:
 
         self.toolButton = QToolButton()
         self.toolButton.setMenu(QMenu())
-        self.toolButton.setToolButtonStyle(
-            Qt.ToolButtonStyle.ToolButtonTextBesideIcon)
+        self.toolButton.setToolButtonStyle(Settings.toolButtonStyle())
         self.toolButton.setPopupMode(
             QToolButton.ToolButtonPopupMode.MenuButtonPopup)
 
@@ -235,14 +234,17 @@ class Plugin:
         recentPluginsCount = len(self.actionsForRecentPlugins())
         dlg = ConfigurationDialog(self.iface.mainWindow())
         dlg.exec()
-        if dlg.result() and recentPluginsCount > Settings.recentPluginsCount():
-            # The max. number of recent plugins is now below the current one.
-            allRecentPlugins = Settings.recentPlugins(listAll=True)
-            toRemove = allRecentPlugins[Settings.recentPluginsCount():]
-            for plugin in toRemove:
-                toolButtonMenu = self.toolButton.menu()
-                for menu in (toolButtonMenu, self.menu):
-                    menu.removeAction(self.actionForPlugin[plugin])
+        if dlg.result():
+            if self.toolButton.toolButtonStyle() != Settings.toolButtonStyle():
+                self.toolButton.setToolButtonStyle(Settings.toolButtonStyle())
+            if recentPluginsCount > Settings.recentPluginsCount():
+                # The max. number of recent plugins is below the current one.
+                allRecentPlugins = Settings.recentPlugins(listAll=True)
+                toRemove = allRecentPlugins[Settings.recentPluginsCount():]
+                for plugin in toRemove:
+                    toolButtonMenu = self.toolButton.menu()
+                    for menu in (toolButtonMenu, self.menu):
+                        menu.removeAction(self.actionForPlugin[plugin])
 
     def run(self, plugin: Optional[str] = None):
         """Reload a plugin."""
