@@ -8,7 +8,7 @@
     <x>0</x>
     <y>0</y>
     <width>500</width>
-    <height>400</height>
+    <height>450</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -20,7 +20,7 @@
   <property name="maximumSize">
    <size>
     <width>500</width>
-    <height>400</height>
+    <height>500</height>
    </size>
   </property>
   <property name="contextMenuPolicy">

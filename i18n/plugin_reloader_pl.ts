@@ -75,42 +75,47 @@ Ta sekcja została wyłączona. Wybieraj wtyczki z nowego rozwijalnego menu w pa
     <message>
         <location filename="../Plugin.py" line="104"/>
         <source>Reload plugin: </source>
-        <translation>Przeładuj wtyczkę: </translation>
+        <translation type="obsolete">Przeładuj wtyczkę: </translation>
     </message>
     <message>
-        <location filename="../Plugin.py" line="215"/>
+        <location filename="../Plugin.py" line="214"/>
         <source>Reload plugin: {}</source>
         <translation>Przeładuj wtyczkę: {}</translation>
     </message>
     <message>
-        <location filename="../Plugin.py" line="144"/>
+        <location filename="../Plugin.py" line="99"/>
         <source>&amp;Plugin Reloader</source>
         <translation>&amp;Plugin Reloader</translation>
     </message>
     <message>
-        <location filename="../Plugin.py" line="166"/>
+        <location filename="../Plugin.py" line="133"/>
         <source>Configure</source>
         <translation>Ustawienia</translation>
     </message>
     <message>
-        <location filename="../Plugin.py" line="257"/>
+        <location filename="../Plugin.py" line="256"/>
         <source>Plugin &lt;b&gt;{}&lt;/b&gt; not found.</source>
         <translation>Nie znaleziono wtyczki &lt;b&gt;{}&lt;/b&gt;.</translation>
     </message>
     <message>
-        <location filename="../Plugin.py" line="349"/>
+        <location filename="../Plugin.py" line="342"/>
         <source>&lt;b&gt;{}&lt;/b&gt; reloaded in {} ms.</source>
         <translation>Wtyczka &lt;b&gt;{}&lt;/b&gt; przeładowana w {} ms.</translation>
     </message>
     <message>
-        <location filename="../Plugin.py" line="389"/>
+        <location filename="../Plugin.py" line="382"/>
         <source>Could not execute extra commands: {}</source>
         <translation>Nie mogę uruchomić polecenia przed przeładowaniem: {}</translation>
     </message>
     <message>
-        <location filename="../Plugin.py" line="158"/>
+        <location filename="../Plugin.py" line="126"/>
         <source>Reload a plugin...</source>
         <translation>Przeładuj wtyczkę...</translation>
+    </message>
+    <message>
+        <location filename="../Plugin.py" line="113"/>
+        <source>Reload recent plugin</source>
+        <translation>Przeładuj ostatnią wtyczkę</translation>
     </message>
 </context>
 <context>

@@ -64,7 +64,7 @@ class Settings():
     @classmethod
     def extraCommandsEnabled(cls) -> bool:
         """Whether CLI command execution before plugin reload is enabled."""
-        return QSettings().value(f'{cls.PREFIX}/extraCommandsEnabled', True,
+        return QSettings().value(f'{cls.PREFIX}/extraCommandsEnabled', False,
                                  type=bool)
 
     @classmethod

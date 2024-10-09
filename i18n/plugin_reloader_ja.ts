@@ -73,41 +73,46 @@ This section is deprecated. Use the new drop-down menu in the toolbar instead.
     <message>
         <location filename="../Plugin.py" line="104"/>
         <source>Reload plugin: </source>
-        <translation>プラグインをリロード: </translation>
+        <translation type="obsolete">プラグインをリロード: </translation>
     </message>
     <message>
-        <location filename="../Plugin.py" line="215"/>
+        <location filename="../Plugin.py" line="214"/>
         <source>Reload plugin: {}</source>
         <translation>プラグインをリロード: {}</translation>
     </message>
     <message>
-        <location filename="../Plugin.py" line="144"/>
+        <location filename="../Plugin.py" line="99"/>
         <source>&amp;Plugin Reloader</source>
         <translation>&amp;P プラグイン リローダ</translation>
     </message>
     <message>
-        <location filename="../Plugin.py" line="166"/>
+        <location filename="../Plugin.py" line="133"/>
         <source>Configure</source>
         <translation>設定</translation>
     </message>
     <message>
-        <location filename="../Plugin.py" line="257"/>
+        <location filename="../Plugin.py" line="256"/>
         <source>Plugin &lt;b&gt;{}&lt;/b&gt; not found.</source>
         <translation>プラグイン &lt;b&gt;{}&lt;/b&gt; が見つかりませんでした。</translation>
     </message>
     <message>
-        <location filename="../Plugin.py" line="349"/>
+        <location filename="../Plugin.py" line="342"/>
         <source>&lt;b&gt;{}&lt;/b&gt; reloaded in {} ms.</source>
         <translation>&lt;b&gt;{}&lt;/b&gt; は {} ms でリロードされました。</translation>
     </message>
     <message>
-        <location filename="../Plugin.py" line="389"/>
+        <location filename="../Plugin.py" line="382"/>
         <source>Could not execute extra commands: {}</source>
         <translation>追加コマンドを実行できませんした: {}</translation>
     </message>
     <message>
-        <location filename="../Plugin.py" line="158"/>
+        <location filename="../Plugin.py" line="126"/>
         <source>Reload a plugin...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Plugin.py" line="113"/>
+        <source>Reload recent plugin</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

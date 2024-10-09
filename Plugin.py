@@ -20,8 +20,8 @@ from time import time
 from typing import Optional
 from qgis.PyQt.QtCore import QCoreApplication, QLocale, QObject, \
     QSettings, QTranslator
-from qgis.PyQt.QtGui import QIcon, QPixmap
-from qgis.PyQt.QtWidgets import QAction, QLabel, QMenu, QToolButton
+from qgis.PyQt.QtGui import QColor, QIcon, QPainter, QPixmap
+from qgis.PyQt.QtWidgets import QAction, QMenu, QToolButton
 
 from qgis.core import Qgis, QgsMessageLog
 from qgis.gui import QgisInterface
@@ -69,72 +69,32 @@ class Plugin:
         """Translate a string."""
         return QCoreApplication.translate('Plugin', message)
 
-    def shortcut(self):
-        """Try to find the best saved keyboard shortcut for recent reload.
-
-        NOTE The action text is variable, so QGIS might save
-        concurrent shortcuts:
-              .../shortcuts/Reload plugin: plugin Foo=F5
-              .../shortcuts/Reload plugin: plugin Bar=Ctrl+F5
-              .../shortcuts/Reload plugin: plugin HelloWorld=Ctrl+Alt+Del
-        """
-        # Start from default value
-        shortcut = "Ctrl+F5"
-
-        # Look for a saved one
-        settings = QSettings()
-        settings.beginGroup('shortcuts')
-        actionTextPrefix = self.tr('Reload plugin: ')
-        for key in settings.childKeys():
-            if key.startswith(actionTextPrefix) and settings.value(key):
-                # Take the first one in case there could be more
-                shortcut = settings.value(key)
-                break
-
-        return shortcut
-
-    def saveShortcut(self, plugin: str, shortcut: str):
-        """Save the current keyboard shortcut to settings.
-
-        This is neccessary
-            # Store the current keyboard shortcut (it's necessary to keep
-            # the shortcut associated with the changing actions)
-
-        """
-        actionTextPrefix = self.tr('Reload plugin: ')
-
-        settings = QSettings()
-        settings.beginGroup('shortcuts')
-
-        # Remove old entries
-        for key in settings.childKeys():
-            if key.startswith(actionTextPrefix):
-                settings.remove(key)
-
-        # Add the current one
-        key = actionTextPrefix + plugin
-        settings.setValue(key, shortcut)
-
     def actionsForRecentPlugins(self) -> list[QAction]:
         """Return list of actions for recently reloaded plugins."""
         actions = [a for a in self.actionForPlugin.values()
                    if a != self.actionAddNewPlugin]
         return actions
 
-    def setTopAction(self, topAction: QAction):
-        """Set the fist action as the default of the tool button \
-        and (re)assign the keyboard shortcut to it."""
-        self.toolButton.setDefaultAction(topAction)
+    def updateDefaultAction(self, plugin: str):
+        """Update the tool button's icon, tooltip, signal and displayed text, \
+        while keeping the action name constant due to registered shortuct.
 
-        for action in self.actionsForRecentPlugins():
-            if action == topAction:
-                # Always assign the default/saved shortcut to the first action.
-                self.iface.registerMainWindowAction(action, self.shortcut())
-            else:
-                # Unset shortcut from the previous action
-                if action.shortcut().toString():
-                    self.iface.unregisterMainWindowAction(action)
-                    action.setShortcut('')
+        NOTE: Since QGIS 3.32 keyboard shortcuts are registered by objectName
+        and not the action text, so it can be simplified some day.
+        """
+        self.actionReloadRecentPlugin.setIcon(
+            self.iconForPlugin(plugin, withOverlay=True))
+
+        text = self.actionForPlugin[plugin].text()
+        toolTipText = text
+        shortcutText = self.actionReloadRecentPlugin.shortcut().toString()
+        if shortcutText and shortcutText not in toolTipText:
+            toolTipText = f"{toolTipText} ({shortcutText})"
+        self.actionReloadRecentPlugin.setToolTip(toolTipText)
+        run = partial(self.run, plugin)
+        self.actionReloadRecentPlugin.disconnect()
+        self.actionReloadRecentPlugin.triggered.connect(run)
+        self.toolButton.setText(text)
 
     def initGui(self):
         """Add actions to the QGIS menu and toolbar."""
@@ -149,25 +109,49 @@ class Plugin:
         self.toolButton.setToolButtonStyle(Settings.toolButtonStyle())
         self.toolButton.setPopupMode(
             QToolButton.ToolButtonPopupMode.MenuButtonPopup)
+        toolButtonMenu = self.toolButton.menu()
 
-        # Create actions for recently processed plugins + a configurable one.
+        # Create default action for the tool button
+        # NOTE The action text must be constant due to the assigned
+        # keybord shortcut. However, the button text and action tooltip
+        # will be later updated according to the current plugin name.
+        self.actionReloadRecentPlugin = QAction(
+            icon, self.tr("Reload recent plugin"))
+        self.actionReloadRecentPlugin.setObjectName(
+            "PluginReloader_ReloadRecentPlugin")
+        self.iface.registerMainWindowAction(
+            self.actionReloadRecentPlugin, "Ctrl+F5")
+
+        # Create actions for recently processed plugins
         self.actionForPlugin = {}
         for plugin in Settings.recentPlugins():
             self.actionForPlugin[plugin] = self.createActionForPlugin(plugin)
 
+        # Create action for adding a new plugin
         self.actionAddNewPlugin = QAction(icon, self.tr("Reload a plugin..."))
         run = partial(self.run, None)
         self.actionAddNewPlugin.triggered.connect(run)
-
+        # Append it to the acions dictionary under a NULL key
         self.actionForPlugin[None] = self.actionAddNewPlugin
 
-        self.setTopAction(list(self.actionForPlugin.values())[0])
-
+        # Create action for opening the settings window
         self.actionSettings = QAction(iconConf, self.tr("Configure"))
         self.actionSettings.triggered.connect(self.openConfigWindow)
 
-        toolButtonMenu = self.toolButton.menu()
+        # Add the actionReloadRecentPlugin to menu (to present its shortcut)
+        # and set it to the tool buttton as the default action
+        self.toolButton.setDefaultAction(self.actionReloadRecentPlugin)
+        self.menu.addAction(self.actionReloadRecentPlugin)
+        self.menu.addSeparator()
 
+        # Update the default action's icon and tooltip and the tool button
+        # text to the most recent plugin. The action text stays constant.
+        recentPlugin = list(self.actionForPlugin.keys())[0]
+        # NOTE Updating the button text must be done after setting the button's
+        # default action!
+        self.updateDefaultAction(recentPlugin)
+
+        # Add all the rest of the actions to the menu and the toolbar
         for action in self.actionForPlugin.values():
             toolButtonMenu.addAction(action)
             self.menu.addAction(action)
@@ -178,19 +162,45 @@ class Plugin:
         toolButtonMenu.addAction(self.actionSettings)
         self.menu.addAction(self.actionSettings)
 
-        self.iconLabel = QLabel()
-        self.iconLabel.setPixmap(QPixmap(
-            str(Path(__file__).parent / 'reload.png')))
-
-        self.iface.addToolBarWidget(self.iconLabel)
         self.iface.addToolBarWidget(self.toolButton)
+
+    def iconForPlugin(self, plugin: str, withOverlay: bool = False) -> QIcon:
+        """Return plugin icon.
+
+        If no plugin icon is availabie, falls back to the reloader icon.
+
+        :param withOverlay: whether to add the reloader arrow overlay
+        """
+        reloaderIcon = QIcon(str(Path(__file__).parent / "reload.png"))
+        if plugin == 'plugin_reloader':
+            return reloaderIcon
+        if plugin not in plugin_installer.plugins.all():
+            return reloaderIcon
+        if 'icon' not in plugin_installer.plugins.all()[plugin]:
+            return reloaderIcon
+
+        icon = QIcon(plugin_installer.plugins.all()[plugin]['icon'])
+
+        if withOverlay:
+            srcPm = icon.pixmap(64, 64)
+            ovrPm = reloaderIcon.pixmap(64, 64)
+
+            pixmap = QPixmap(64, 64)
+            pixmap.fill(QColor(0, 0, 0, 0))
+            painter = QPainter(pixmap)
+            painter.drawPixmap(0, 0, 64, 64, srcPm)
+            painter.drawPixmap(20, 20, 48, 48, ovrPm)
+            painter.end()
+            icon = QIcon(pixmap)
+
+        return icon
 
     def updatePluginIcons(self):
         """Update plugin icons when QGIS initialization is completed \
         and plugin registry is filled."""
         for plugin, action in self.actionForPlugin.items():
             if plugin in plugin_installer.plugins.all():
-                icon = QIcon(plugin_installer.plugins.all()[plugin]['icon'])
+                icon = self.iconForPlugin(plugin)
                 action.setIcon(icon)
 
     def unload(self):
@@ -199,19 +209,13 @@ class Plugin:
             # The initGui() method was never called
             return
 
-        for action in self.actionsForRecentPlugins():
-            self.iface.unregisterMainWindowAction(action)
-
+        self.iface.unregisterMainWindowAction(self.actionReloadRecentPlugin)
         self.iface.pluginMenu().removeAction(self.menu.menuAction())
         self.toolButton.deleteLater()
-        self.iconLabel.deleteLater()
 
     def createActionForPlugin(self, plugin: str) -> QAction:
         """Create reloading action for a given plugin."""
-        try:
-            icon = QIcon(plugin_installer.plugins.all()[plugin]['icon'])
-        except KeyError:
-            icon = QIcon(str(Path(__file__).parent / "reload.png"))
+        icon = self.iconForPlugin(plugin)
         actionName = self.tr("Reload plugin: {}").format(plugin)
         action = QAction(icon, actionName)
         action.setToolTip(actionName)
@@ -219,7 +223,7 @@ class Plugin:
         action.triggered.connect(run)
         return action
 
-    def selectPlugin(self) -> Optional[str]:
+    def choosePluginToReload(self) -> Optional[str]:
         """Open the plugin selection dialog and return choosen plugin."""
         dlg = PluginSelectionDialog(self.iface.mainWindow())
         dlg.exec()
@@ -261,7 +265,7 @@ class Plugin:
 
         if plugin is None:
             # Open plugin selection window
-            plugin = self.selectPlugin()
+            plugin = self.choosePluginToReload()
 
             if plugin is None:
                 # User cancelled
@@ -279,39 +283,33 @@ class Plugin:
 
     def updateRecentPluginsOrder(self, recentPlugin: str):
         """Update menus and settings by putting the recent plugin on top."""
-        menus = (self.toolButton.menu(), self.menu)
-
-        oldTopAction = self.menu.actions()[0]
+        oldTopAction = self.toolButton.menu().actions()[0]
 
         if recentPlugin in self.actionForPlugin:
             # Move the reloaded plugin to the top of the list
             newTopAction = self.actionForPlugin[recentPlugin]
             if newTopAction != oldTopAction:
-                for menu in menus:
-                    menu.insertAction(menu.actions()[0], newTopAction)
+                self.toolButton.menu().insertAction(
+                    self.toolButton.menu().actions()[0], newTopAction)
+                self.menu.insertAction(self.menu.actions()[2], newTopAction)
         else:
             # Add the new action on top...
             newTopAction = self.createActionForPlugin(recentPlugin)
             self.actionForPlugin[recentPlugin] = newTopAction
-            for menu in menus:
-                menu.insertAction(menu.actions()[0], newTopAction)
+            self.toolButton.menu().insertAction(
+                self.toolButton.menu().actions()[0], newTopAction)
+            self.menu.insertAction(self.menu.actions()[2], newTopAction)
             # ...and remove the oldest one if necessary.
             recentPluginsCount = len(self.actionForPlugin) - 1
             if recentPluginsCount > Settings.recentPluginsCount():
                 oldestPlugin = Settings.recentPlugins()[-1]
                 oldestPluginAction = self.actionForPlugin.pop(oldestPlugin)
-                for menu in menus:
+                for menu in (self.toolButton.menu(), self.menu):
                     menu.removeAction(oldestPluginAction)
 
         if newTopAction != oldTopAction:
-            if oldTopAction != self.actionAddNewPlugin:
-                # Preserve the current keyboard shortcut when the aassociated
-                # action change
-                shortcut = oldTopAction.shortcut().toString()
-                self.saveShortcut(recentPlugin, shortcut)
-
-            # Move the new action to top
-            self.setTopAction(newTopAction)
+            # Update the button's default action
+            self.updateDefaultAction(recentPlugin)
             # Set the plugin as the most recent
             Settings.updateRecentPlugins(recentPlugin)
 
