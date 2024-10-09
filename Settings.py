@@ -11,7 +11,7 @@ the Free Software Foundation; either version 2 of the License, or
 (at your option) any later version.
 """
 
-from qgis.PyQt.QtCore import QSettings
+from qgis.PyQt.QtCore import Qt, QSettings
 
 
 class Settings():
@@ -64,7 +64,7 @@ class Settings():
     @classmethod
     def extraCommandsEnabled(cls) -> bool:
         """Whether CLI command execution before plugin reload is enabled."""
-        return QSettings().value(f'{cls.PREFIX}/extraCommandsEnabled', True,
+        return QSettings().value(f'{cls.PREFIX}/extraCommandsEnabled', False,
                                  type=bool)
 
     @classmethod
@@ -93,3 +93,23 @@ class Settings():
     def setRecentPluginsCount(cls, count: int):
         """Set number of recent plugins to display in the menu."""
         QSettings().setValue(f'{cls.PREFIX}/recentPluginsCount', count)
+
+    @classmethod
+    def toolButtonStyle(cls) -> Qt.ToolButtonStyle:
+        """Get toolbar button style (with text or icon only)."""
+        if cls.toolButtonTextEnabled():
+            buttonStyle = Qt.ToolButtonStyle.ToolButtonTextBesideIcon
+        else:
+            buttonStyle = Qt.ToolButtonStyle.ToolButtonIconOnly
+        return buttonStyle
+
+    @classmethod
+    def toolButtonTextEnabled(cls) -> bool:
+        """Whether to display text beside the toolbar icon."""
+        return QSettings().value(f'{cls.PREFIX}/toolButtonTextEnabled',
+                                 True, type=bool)
+
+    @classmethod
+    def setToolButtonTextEnabled(cls, state: bool):
+        """Enable or disable text displayed beside the toolbar icon."""
+        QSettings().setValue(f'{cls.PREFIX}/toolButtonTextEnabled', state)

@@ -32,6 +32,7 @@ class ConfigurationDialog(QDialog, FORM_CLASS):
         """Pseudoconstructor."""
         super().__init__(parent)
         self.setupUi(self)
+        self.cbToolButtonText.setChecked(Settings.toolButtonTextEnabled())
         self.cbNotifications.setChecked(Settings.notificationsEnabled())
         self.cbExtraCommands.setChecked(Settings.extraCommandsEnabled())
         self.pteExtraCommands.setPlainText(Settings.getExtraCommands())
@@ -62,6 +63,7 @@ class ConfigurationDialog(QDialog, FORM_CLASS):
 
     def accept(self):
         """Accept."""
+        Settings.setToolButtonTextEnabled(self.cbToolButtonText.isChecked())
         Settings.setNotificationsEnabled(self.cbNotifications.isChecked())
         Settings.setExtraCommandsEnabled(self.cbExtraCommands.isChecked())
         Settings.setExtraCommands(self.pteExtraCommands.toPlainText())
