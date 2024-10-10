@@ -33,39 +33,41 @@
     <message>
         <location filename="../ConfigurationDialogBase.ui" line="86"/>
         <source>Select &amp;the plugin you want to reload</source>
-        <translation>Selezionare &amp;il plugin che si desidera ricaricare</translation>
+        <translation>Seleziona &amp;il plugin che desideri ricaricare</translation>
     </message>
     <message>
         <location filename="../ConfigurationDialogBase.ui" line="201"/>
         <source>Run the commands below before reloading</source>
-        <translation>Eseguire i comandi qui sotto prima di ricaricare</translation>
+        <translation>Esegui i seguenti comandi prima di ricaricare</translation>
     </message>
     <message>
         <location filename="../ConfigurationDialogBase.ui" line="169"/>
         <source>Number of recent plugins in the menu</source>
-        <translation type="unfinished"></translation>
+        <translation>Numero di plugin recenti da visualizzare nel menu</translation>
     </message>
     <message>
         <location filename="../ConfigurationDialogBase.ui" line="92"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;color:red&quot;&gt;
 This section is deprecated. Use the new drop-down menu in the toolbar instead.
 &lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;color:red&quot;&gt;
+Questa sezione è obsoleta. Usa il nuovo menu a tendina nella barra degli strumenti.
+&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../ConfigurationDialogBase.ui" line="166"/>
         <source>Maximum number of entries in the drop-down menu</source>
-        <translation type="unfinished"></translation>
+        <translation>Numero massimo di plugin da mostrare nel menu a tendina</translation>
     </message>
     <message>
         <location filename="../ConfigurationDialogBase.ui" line="208"/>
         <source>Display description with the current plugin name beside the icon in the Plugin toolbar.</source>
-        <translation type="unfinished"></translation>
+        <translation>Mostra la descrizione del plugin attuale vicino all&apos;icona nella barra del plugin.</translation>
     </message>
     <message>
         <location filename="../ConfigurationDialogBase.ui" line="211"/>
         <source>Display the plugin name in the toolbar</source>
-        <translation type="unfinished"></translation>
+        <translation>Mostra il nome del plugin nella barra degli strumenti</translation>
     </message>
 </context>
 <context>
@@ -103,17 +105,17 @@ This section is deprecated. Use the new drop-down menu in the toolbar instead.
     <message>
         <location filename="../Plugin.py" line="382"/>
         <source>Could not execute extra commands: {}</source>
-        <translation type="unfinished"></translation>
+        <translation>Errore durante l&apos;esecuzione dei comandi extra: {}</translation>
     </message>
     <message>
         <location filename="../Plugin.py" line="126"/>
         <source>Reload a plugin...</source>
-        <translation type="unfinished"></translation>
+        <translation>Ricarica un plugin...</translation>
     </message>
     <message>
         <location filename="../Plugin.py" line="113"/>
         <source>Reload recent plugin</source>
-        <translation type="unfinished"></translation>
+        <translation>Ricarica il plugin recente</translation>
     </message>
 </context>
 <context>
@@ -121,12 +123,12 @@ This section is deprecated. Use the new drop-down menu in the toolbar instead.
     <message>
         <location filename="../PluginSelectionDialogBase.ui" line="30"/>
         <source>Reload a plugin</source>
-        <translation type="unfinished"></translation>
+        <translation>Ricarica un plugin</translation>
     </message>
     <message>
         <location filename="../PluginSelectionDialogBase.ui" line="52"/>
         <source>Select &amp;the plugin you want to reload</source>
-        <translation type="unfinished">Selezionare &amp;il plugin che si desidera ricaricare</translation>
+        <translation>Seleziona &amp;il plugin che desideri ricaricare</translation>
     </message>
 </context>
 </TS>
