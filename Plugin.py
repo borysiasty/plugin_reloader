@@ -224,8 +224,7 @@ class Plugin:
                 action.setIcon(icon)
 
         recentPlugin = list(self.actionForPlugin.keys())[0]
-        icon = self.iconForPlugin(recentPlugin, withOverlay=True)
-        self.actionReloadRecentPlugin.setIcon(icon)
+        self.updateDefaultAction(recentPlugin)
 
     def choosePluginToReload(self) -> Optional[str]:
         """Open the plugin selection dialog and return choosen plugin."""
