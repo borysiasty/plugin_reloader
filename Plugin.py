@@ -318,7 +318,6 @@ class Plugin:
 
     def reloadPlugin(self, plugin: str):
         """Reload plugin with submodules and check if it was successful."""
-        windowState = self.iface.mainWindow().saveState()
         startTime = time()
 
         # Try to initially load the selected plugin if not loaded yet
@@ -343,7 +342,6 @@ class Plugin:
         pluginStarted = qgis.utils.startPlugin(plugin)
 
         endTime = time()
-        self.iface.mainWindow().restoreState(windowState)
 
         if pluginStarted and Settings.notificationsEnabled():
             duration = int(round((endTime - startTime) * 1000))
