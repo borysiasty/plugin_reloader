@@ -6,7 +6,7 @@ description=Reloads a chosen plugin in one click
 description[pl]=Przeładowuje wybraną wtyczkę jednym kliknięciem
 about=This tool is only useful for Python Plugin Developers!
 about[pl]=Narzędzie przydatne tylko dla autorów wtyczek!
-version=0.17
+version=0.18
 
 # Optional items:
 
