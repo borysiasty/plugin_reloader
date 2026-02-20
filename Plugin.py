@@ -46,6 +46,7 @@ class Plugin:
         """Pseudoconstructor."""
         self.iface = iface
 
+        # TODO: Harmonize the usage of "recent" and "default" plugin.
         self._default_plugin: Optional[str] = None
 
         self.menu = None
@@ -95,7 +96,7 @@ class Plugin:
         self.iface.registerMainWindowAction(
             self.actionReloadRecentPlugin, "Ctrl+F5")
 
-        self.actionReloadRecentPlugin.triggered.connect(self.reload_default_plugin)
+        self.actionReloadRecentPlugin.triggered.connect(self.reloadDefaultPlugin)
 
         # Create actions for recently processed plugins
         self.actionForPlugin = {}
@@ -255,10 +256,8 @@ class Plugin:
                     for menu in (toolButtonMenu, self.menu):
                         menu.removeAction(self.actionForPlugin[plugin])
 
-    def reload_default_plugin(self):
-        """
-        Reloads the default plugin.
-        """
+    def reloadDefaultPlugin(self):
+        """Reloads the default plugin."""
         if not self._default_plugin:
             return
 

@@ -1,3 +1,6 @@
+0.19
+Fix hang on plugin startup on QGIS 4. Patch by Nyall Dawson.
+
 0.18
 Add Spanish translation. Patch by franzpc.
 
