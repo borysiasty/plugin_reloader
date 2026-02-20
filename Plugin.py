@@ -46,6 +46,8 @@ class Plugin:
         """Pseudoconstructor."""
         self.iface = iface
 
+        self._default_plugin: Optional[str] = None
+
         self.menu = None
 
         if QSettings().value('locale/overrideFlag', type=bool):
@@ -92,6 +94,8 @@ class Plugin:
             "PluginReloader_ReloadRecentPlugin")
         self.iface.registerMainWindowAction(
             self.actionReloadRecentPlugin, "Ctrl+F5")
+
+        self.actionReloadRecentPlugin.triggered.connect(self.reload_default_plugin)
 
         # Create actions for recently processed plugins
         self.actionForPlugin = {}
@@ -170,18 +174,16 @@ class Plugin:
         NOTE: Since QGIS 3.32 keyboard shortcuts are registered by objectName
         and not the action text, so it can be simplified some day.
         """
+        self._default_plugin = plugin
         self.actionReloadRecentPlugin.setIcon(
-            self.iconForPlugin(plugin, withOverlay=True))
+            self.iconForPlugin(self._default_plugin, withOverlay=True))
 
-        text = self.actionForPlugin[plugin].text()
+        text = self.actionForPlugin[self._default_plugin].text()
         toolTipText = text
         shortcutText = self.actionReloadRecentPlugin.shortcut().toString()
         if shortcutText and shortcutText not in toolTipText:
             toolTipText = f"{toolTipText} ({shortcutText})"
         self.actionReloadRecentPlugin.setToolTip(toolTipText)
-        run = partial(self.run, plugin)
-        self.actionReloadRecentPlugin.disconnect()
-        self.actionReloadRecentPlugin.triggered.connect(run)
         self.toolButton.setText(text)
 
     def iconForPlugin(self, plugin: str, withOverlay: bool = False) -> QIcon:
@@ -252,6 +254,15 @@ class Plugin:
                     toolButtonMenu = self.toolButton.menu()
                     for menu in (toolButtonMenu, self.menu):
                         menu.removeAction(self.actionForPlugin[plugin])
+
+    def reload_default_plugin(self):
+        """
+        Reloads the default plugin.
+        """
+        if not self._default_plugin:
+            return
+
+        self.run(self._default_plugin)
 
     def run(self, plugin: Optional[str] = None):
         """Reload a plugin."""
@@ -395,3 +406,4 @@ class Plugin:
             successExtraCommands = False
 
         return successExtraCommands
+
