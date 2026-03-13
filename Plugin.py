@@ -13,6 +13,7 @@ the Free Software Foundation; either version 2 of the License, or
 
 import os
 import sys
+import shlex
 import subprocess
 from functools import partial
 from pathlib import Path
@@ -378,19 +379,27 @@ class Plugin:
 
         try:
             extraCommands = Settings.getExtraCommands()
-            if extraCommands.strip():  # Prevent an empty command to be run
-                path = plugin_installer.plugins.all()[plugin]['library']
-                extraCommands = extraCommands.replace('%PluginName%', plugin)
-                extraCommands = extraCommands.replace('%PluginPath%', path)
+            if not extraCommands.strip():  # Prevent an empty command to be run
+                return True
+
+            path = plugin_installer.plugins.all()[plugin]['library']
+            extraCommands = extraCommands.replace('%PluginName%', plugin)
+            extraCommands = extraCommands.replace('%PluginPath%', path)
+
+            for line in extraCommands.splitlines():
+                cmd = line.strip()
+                cmd = cmd.rstrip(';')
+                if not cmd:
+                    continue
 
                 completed_process = subprocess.run(
-                    extraCommands,
-                    shell=True,
+                    shlex.split(cmd),
+                    text=True,
                     capture_output=True,
                     check=True,
                 )
 
-                message = completed_process.stdout.decode('utf-8', 'replace')
+                message = completed_process.stdout
                 if message:
                     self.iface.messageBar().pushMessage(message, Qgis.Info)
 
@@ -398,11 +407,9 @@ class Plugin:
 
         except subprocess.CalledProcessError as exc:
             self.iface.messageBar().pushMessage(
-                self.tr('Could not execute extra commands: {}').format(
-                    exc.stderr.decode('utf-8', 'replace')),
+                self.tr('Could not execute extra commands: {}').format(exc.stderr),
                 Qgis.Warning
             )
             successExtraCommands = False
 
         return successExtraCommands
-
