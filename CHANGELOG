@@ -1,3 +1,6 @@
+0.21
+Security fix: avoid using shell=True in subprocess
+
 0.20
 Fix QGIS4 compatibility.
 
