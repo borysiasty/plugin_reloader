@@ -19,10 +19,11 @@ from functools import partial
 from pathlib import Path
 from time import time
 from typing import Optional
-from qgis.PyQt.QtCore import QCoreApplication, QLocale, QObject, \
+from qgis.PyQt.QtCore import QCoreApplication, QEvent, QLocale, QObject, \
     QSettings, QTranslator
 from qgis.PyQt.QtGui import QColor, QIcon, QPainter, QPixmap
-from qgis.PyQt.QtWidgets import QAction, QMenu, QToolButton
+from qgis.PyQt.QtWidgets import QAction, QDockWidget, QMenu, QToolBar, \
+    QToolButton
 
 from qgis.core import Qgis, QgsMessageLog
 from qgis.gui import QgisInterface
@@ -32,6 +33,13 @@ from pyplugin_installer import installer as plugin_installer
 from .ConfigurationDialog import ConfigurationDialog
 from .PluginSelectionDialog import PluginSelectionDialog
 from .Settings import Settings
+
+
+def _deferredDeleteEventType():
+    """Return the DeferredDelete event enum for Qt 5 and Qt 6."""
+    if hasattr(QEvent, 'DeferredDelete'):
+        return QEvent.DeferredDelete
+    return QEvent.Type.DeferredDelete
 
 
 class Plugin:
@@ -329,7 +337,8 @@ class Plugin:
 
     def reloadPlugin(self, plugin: str):
         """Reload plugin with submodules and check if it was successful."""
-        windowState = self.iface.mainWindow().saveState()
+        mainWindow = self.iface.mainWindow()
+        windowState = mainWindow.saveState()
         startTime = time()
 
         # Try to initially load the selected plugin if not loaded yet
@@ -350,11 +359,30 @@ class Plugin:
                     sys.modules[key].qCleanupResources()
                 del sys.modules[key]
 
+        # Snapshot dockable widgets that survived unloadPlugin(). Some
+        # plugins drop only the Python reference (e.g. `del self.toolbar`)
+        # in unload(), leaving the C++ widget parented to the main window.
+        # After the plugin reloads, initGui() creates a fresh widget with
+        # the same objectName and we end up with a visible duplicate that
+        # ignores user clicks; restoreState() below would also re-show or
+        # re-position the orphan via objectName lookup. We resolve this
+        # by deleting any pre-load widget whose objectName collides with
+        # a widget that the reload just added.
+        preLoadToolbars = list(mainWindow.findChildren(QToolBar))
+        preLoadDocks = list(mainWindow.findChildren(QDockWidget))
+
         qgis.utils.loadPlugin(plugin)
         pluginStarted = qgis.utils.startPlugin(plugin)
 
+        self._deleteOrphanDuplicates(mainWindow, QToolBar, preLoadToolbars)
+        self._deleteOrphanDuplicates(mainWindow, QDockWidget, preLoadDocks)
+        # Force the deferred deletions to happen now so the orphans are
+        # gone before restoreState() looks up widgets by objectName.
+        # (processEvents() alone does not flush DeferredDelete events.)
+        QCoreApplication.sendPostedEvents(None, _deferredDeleteEventType())
+
         endTime = time()
-        self.iface.mainWindow().restoreState(windowState)
+        mainWindow.restoreState(windowState)
 
         if pluginStarted and Settings.notificationsEnabled():
             duration = int(round((endTime - startTime) * 1000))
@@ -368,6 +396,28 @@ class Plugin:
             pluginsLogTabSourceName = "Plugins"
             pluginsLogTabName = QObject().tr(pluginsLogTabSourceName)
             QgsMessageLog.logMessage(msg, pluginsLogTabName, level=Qgis.Info)
+
+    @staticmethod
+    def _deleteOrphanDuplicates(mainWindow, qclass, preLoadWidgets):
+        """Delete dockable widgets that survived unloadPlugin() and now \
+collide by objectName with a widget added during the reload."""
+        preLoadSet = set(preLoadWidgets)
+        newNames = set()
+        for widget in mainWindow.findChildren(qclass):
+            if widget in preLoadSet:
+                continue
+            name = widget.objectName()
+            if name:
+                newNames.add(name)
+        if not newNames:
+            return
+        for widget in preLoadWidgets:
+            try:
+                if widget.objectName() in newNames:
+                    widget.deleteLater()
+            except RuntimeError:
+                # Wrapper points at an already-deleted C++ object; skip.
+                pass
 
     def handleExtraCommands(self) -> bool:
         """Execute extra CLI commands prior to the plugin reload."""
