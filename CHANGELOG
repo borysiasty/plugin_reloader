@@ -1,3 +1,6 @@
+0.22
+Fix duplicated toolbars/dock widgets on plugin reload. Patch by Qiusheng Wu.
+
 0.21
 Security fix: avoid using shell=True in subprocess
 
