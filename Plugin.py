@@ -35,6 +35,13 @@ from .PluginSelectionDialog import PluginSelectionDialog
 from .Settings import Settings
 
 
+def _deferredDeleteEventType():
+    """Return the DeferredDelete event enum for Qt 5 and Qt 6."""
+    if hasattr(QEvent, 'DeferredDelete'):
+        return QEvent.DeferredDelete
+    return QEvent.Type.DeferredDelete
+
+
 class Plugin:
     """The plugin class."""
 
@@ -372,7 +379,7 @@ class Plugin:
         # Force the deferred deletions to happen now so the orphans are
         # gone before restoreState() looks up widgets by objectName.
         # (processEvents() alone does not flush DeferredDelete events.)
-        QCoreApplication.sendPostedEvents(None, QEvent.DeferredDelete)
+        QCoreApplication.sendPostedEvents(None, _deferredDeleteEventType())
 
         endTime = time()
         mainWindow.restoreState(windowState)
