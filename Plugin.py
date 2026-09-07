@@ -106,7 +106,8 @@ class Plugin:
         self.iface.registerMainWindowAction(
             self.actionReloadRecentPlugin, "Ctrl+F5")
 
-        self.actionReloadRecentPlugin.triggered.connect(self.reloadDefaultPlugin)
+        self.actionReloadRecentPlugin.triggered.connect(
+            self.reloadDefaultPlugin)
 
         # Create actions for recently processed plugins
         self.actionForPlugin = {}
@@ -382,8 +383,10 @@ class Plugin:
         pluginStarted = qgis.utils.isPluginLoaded(plugin)
 
         orphans = []
-        orphans += self._deleteOrphanDuplicates(mainWindow, QToolBar, preLoadToolbars)
-        orphans += self._deleteOrphanDuplicates(mainWindow, QDockWidget, preLoadDocks)
+        orphans += self._deleteOrphanDuplicates(
+            mainWindow, QToolBar, preLoadToolbars)
+        orphans += self._deleteOrphanDuplicates(
+            mainWindow, QDockWidget, preLoadDocks)
         # Force the deferred deletions to happen now so the orphans are
         # gone before restoreState() looks up widgets by objectName.
         # (processEvents() alone does not flush DeferredDelete events.)
@@ -408,8 +411,8 @@ class Plugin:
             # to prevent local pylupdate from catching it.
             pluginsLogTabSourceName = "Plugins"
             pluginsLogTabName = QObject().tr(pluginsLogTabSourceName)
-            QgsMessageLog.logMessage(re.sub(r'<\/?b>', '', msg), pluginsLogTabName,
-                                     level=Qgis.Info)
+            QgsMessageLog.logMessage(
+                re.sub(r'<\/?b>', '', msg), pluginsLogTabName, level=Qgis.Info)
 
     @staticmethod
     def _deleteOrphanDuplicates(mainWindow: QMainWindow, qclass: type[QWidget],
@@ -451,8 +454,6 @@ collide by objectName with a widget added during the reload."""
                 return True
 
             path = plugin_installer.plugins.all()[plugin]['library']
-            extraCommands = extraCommands.replace('%PluginName%', plugin)
-            extraCommands = extraCommands.replace('%PluginPath%', path)
 
             for line in extraCommands.splitlines():
                 cmd = line.strip()
@@ -460,8 +461,16 @@ collide by objectName with a widget added during the reload."""
                 if not cmd:
                     continue
 
-                completed_process = subprocess.run(
-                    shlex.split(cmd),
+                args = [
+                    arg.replace('%PluginName%', plugin).replace(
+                        '%PluginPath%', path
+                    )
+                    for arg in shlex.split(cmd)
+                ]
+
+                # Commands are explicitly configured by the user.
+                completed_process = subprocess.run(  # nosec B603 (user-configured command)
+                    args,
                     text=True,
                     capture_output=True,
                     check=True,
@@ -475,7 +484,8 @@ collide by objectName with a widget added during the reload."""
 
         except subprocess.CalledProcessError as exc:
             self.iface.messageBar().pushMessage(
-                self.tr('Could not execute extra commands: {}').format(exc.stderr),
+                self.tr('Could not execute extra commands: {}').format(
+                    exc.stderr),
                 Qgis.Warning
             )
             successExtraCommands = False

@@ -1,5 +1,7 @@
 0.23
+Harden extra command execution
 Fix broken notification
+Fix flake8 issues
 
 0.22
 Fix duplicated toolbars/dock widgets on plugin reload. Patch by Qiusheng Wu.
