@@ -360,6 +360,11 @@ class Plugin:
                     sys.modules[key].qCleanupResources()
                 del sys.modules[key]
 
+        # Do not mistake widgets correctly scheduled for deletion in unload()
+        # for orphans. DeferredDelete events are not normally handled until
+        # control returns to the event loop, but the reload continues here.
+        QCoreApplication.sendPostedEvents(None, _deferredDeleteEventType())
+
         # Snapshot dockable widgets that survived unloadPlugin(). Some
         # plugins drop only the Python reference (e.g. `del self.toolbar`)
         # in unload(), leaving the C++ widget parented to the main window.
@@ -373,7 +378,8 @@ class Plugin:
         preLoadDocks = list(mainWindow.findChildren(QDockWidget))
 
         qgis.utils.loadPlugin(plugin)
-        pluginStarted = qgis.utils.startPlugin(plugin)
+        qgis.utils.startPlugin(plugin)
+        pluginStarted = qgis.utils.isPluginLoaded(plugin)
 
         orphans = []
         orphans += self._deleteOrphanDuplicates(mainWindow, QToolBar, preLoadToolbars)
