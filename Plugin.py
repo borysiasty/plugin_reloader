@@ -20,11 +20,10 @@ from functools import partial
 from pathlib import Path
 from time import time
 from typing import Optional
-from qgis.PyQt.QtCore import QCoreApplication, QEvent, QLocale, QObject, \
+from qgis.PyQt.QtCore import QCoreApplication, QLocale, QObject, \
     QSettings, QTranslator
 from qgis.PyQt.QtGui import QColor, QIcon, QPainter, QPixmap
-from qgis.PyQt.QtWidgets import QAction, QDockWidget, QMenu, QMainWindow, \
-    QToolBar, QToolButton, QWidget
+from qgis.PyQt.QtWidgets import QAction, QMenu, QToolButton
 
 from qgis.core import Qgis, QgsMessageLog
 from qgis.gui import QgisInterface
@@ -34,13 +33,6 @@ from pyplugin_installer import installer as plugin_installer
 from .ConfigurationDialog import ConfigurationDialog
 from .PluginSelectionDialog import PluginSelectionDialog
 from .Settings import Settings
-
-
-def _deferredDeleteEventType():
-    """Return the DeferredDelete event enum for Qt 5 and Qt 6."""
-    if hasattr(QEvent, 'DeferredDelete'):
-        return QEvent.DeferredDelete
-    return QEvent.Type.DeferredDelete
 
 
 class Plugin:
@@ -361,36 +353,9 @@ class Plugin:
                     sys.modules[key].qCleanupResources()
                 del sys.modules[key]
 
-        # Do not mistake widgets correctly scheduled for deletion in unload()
-        # for orphans. DeferredDelete events are not normally handled until
-        # control returns to the event loop, but the reload continues here.
-        QCoreApplication.sendPostedEvents(None, _deferredDeleteEventType())
-
-        # Snapshot dockable widgets that survived unloadPlugin(). Some
-        # plugins drop only the Python reference (e.g. `del self.toolbar`)
-        # in unload(), leaving the C++ widget parented to the main window.
-        # After the plugin reloads, initGui() creates a fresh widget with
-        # the same objectName and we end up with a visible duplicate that
-        # ignores user clicks; restoreState() below would also re-show or
-        # re-position the orphan via objectName lookup. We resolve this
-        # by deleting any pre-load widget whose objectName collides with
-        # a widget that the reload just added.
-        preLoadToolbars = list(mainWindow.findChildren(QToolBar))
-        preLoadDocks = list(mainWindow.findChildren(QDockWidget))
-
         qgis.utils.loadPlugin(plugin)
         qgis.utils.startPlugin(plugin)
         pluginStarted = qgis.utils.isPluginLoaded(plugin)
-
-        orphans = []
-        orphans += self._deleteOrphanDuplicates(
-            mainWindow, QToolBar, preLoadToolbars)
-        orphans += self._deleteOrphanDuplicates(
-            mainWindow, QDockWidget, preLoadDocks)
-        # Force the deferred deletions to happen now so the orphans are
-        # gone before restoreState() looks up widgets by objectName.
-        # (processEvents() alone does not flush DeferredDelete events.)
-        QCoreApplication.sendPostedEvents(None, _deferredDeleteEventType())
 
         endTime = time()
         mainWindow.restoreState(windowState)
@@ -399,12 +364,7 @@ class Plugin:
             duration = int(round((endTime - startTime) * 1000))
             msg = self.tr('<b>{}</b> reloaded in {} ms.').format(plugin,
                                                                  duration)
-            if orphans:
-                msg += self.tr(' <b>WARNING</b>: removing duplicated widget(s)'
-                               ' not cleaned up by the plugin during unload:'
-                               ' <b>{}</b>.').format(', '.join(orphans))
-            self.iface.messageBar().pushMessage(
-                msg, Qgis.Warning if orphans else Qgis.Success)
+            self.iface.messageBar().pushMessage(msg, Qgis.Success)
             # Actual name of the "Plugins" tab in the message log panel
             # is localized, so we need to find it in QGIS' translations.
             # Don't pass the string value directly to QObject().tr()
@@ -413,32 +373,6 @@ class Plugin:
             pluginsLogTabName = QObject().tr(pluginsLogTabSourceName)
             QgsMessageLog.logMessage(
                 re.sub(r'<\/?b>', '', msg), pluginsLogTabName, level=Qgis.Info)
-
-    @staticmethod
-    def _deleteOrphanDuplicates(mainWindow: QMainWindow, qclass: type[QWidget],
-                                preLoadWidgets: list[QWidget]) -> list[str]:
-        """Delete dockable widgets that survived unloadPlugin() and now \
-collide by objectName with a widget added during the reload."""
-        orphans = []
-        preLoadSet = set(preLoadWidgets)
-        newNames = set()
-        for widget in mainWindow.findChildren(qclass):
-            if widget in preLoadSet:
-                continue
-            name = widget.objectName()
-            if name:
-                newNames.add(name)
-        if not newNames:
-            return []
-        for widget in preLoadWidgets:
-            try:
-                if widget.objectName() in newNames:
-                    orphans.append(widget.objectName())
-                    widget.deleteLater()
-            except RuntimeError:
-                # Wrapper points at an already-deleted C++ object; skip.
-                pass
-        return orphans
 
     def handleExtraCommands(self) -> bool:
         """Execute extra CLI commands prior to the plugin reload."""
