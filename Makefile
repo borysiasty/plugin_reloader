@@ -1,7 +1,7 @@
 PLUGINNAME = $(shell basename $(PWD))
 VERSION = $(shell sed -n 's/version=//p' metadata.txt)
 ZIPFILE = $(HOME)/$(PLUGINNAME).$(VERSION).zip
-.PHONY: help pylint pep8 zip lupdate
+.PHONY: help pylint pep8 zip lupdate lrelease
 
 help:
 	@echo "Please use \`make <target>' where <target> is one of"
@@ -10,6 +10,7 @@ help:
 	@echo "  flake       check Python code with flake8"
 	@echo "  zip         build zip package"
 	@echo "  lupdate     update translation files"
+	@echo "  lrelease    compile translation files"
 
 
 pep8:
@@ -37,3 +38,7 @@ lupdate:
 	-ts i18n/plugin_reloader_it.ts \
 	-ts i18n/plugin_reloader_ja.ts \
 	-ts i18n/plugin_reloader_es.ts
+
+
+lrelease:
+	@cd i18n && lrelease plugin_reloader.pro

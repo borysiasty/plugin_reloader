@@ -74,47 +74,42 @@ Questa sezione è obsoleta. Usa il nuovo menu a tendina nella barra degli strume
   <context>
     <name>Plugin</name>
     <message>
-      <location filename="../Plugin.py" line="88" />
+      <location filename="../Plugin.py" line="80" />
       <source>&amp;Plugin Reloader</source>
       <translation>&amp;Plugin Reloader</translation>
     </message>
     <message>
-      <location filename="../Plugin.py" line="103" />
+      <location filename="../Plugin.py" line="95" />
       <source>Reload recent plugin</source>
       <translation>Ricarica il plugin recente</translation>
     </message>
     <message>
-      <location filename="../Plugin.py" line="117" />
+      <location filename="../Plugin.py" line="110" />
       <source>Reload a plugin...</source>
       <translation>Ricarica un plugin...</translation>
     </message>
     <message>
-      <location filename="../Plugin.py" line="124" />
+      <location filename="../Plugin.py" line="117" />
       <source>Configure</source>
       <translation>Configura</translation>
     </message>
     <message>
-      <location filename="../Plugin.py" line="168" />
+      <location filename="../Plugin.py" line="161" />
       <source>Reload plugin: {}</source>
       <translation>Ricarica il plugin: {}</translation>
     </message>
     <message>
-      <location filename="../Plugin.py" line="285" />
+      <location filename="../Plugin.py" line="278" />
       <source>Plugin &lt;b&gt;{}&lt;/b&gt; not found.</source>
       <translation>Plugin &lt;b&gt;{}&lt;/b&gt; non trovato.</translation>
     </message>
     <message>
-      <location filename="../Plugin.py" line="391" />
+      <location filename="../Plugin.py" line="365" />
       <source>&lt;b&gt;{}&lt;/b&gt; reloaded in {} ms.</source>
       <translation>&lt;b&gt;{}&lt;/b&gt; ricaricato in {} ms.</translation>
     </message>
     <message>
-      <location filename="../Plugin.py" line="394" />
-      <source> &lt;b&gt;WARNING&lt;/b&gt;: removing duplicated widget(s) not cleaned up by the plugin during unload: &lt;b&gt;{}&lt;/b&gt;.</source>
-      <translation type="unfinished" />
-    </message>
-    <message>
-      <location filename="../Plugin.py" line="472" />
+      <location filename="../Plugin.py" line="421" />
       <source>Could not execute extra commands: {}</source>
       <translation>Errore durante l'esecuzione dei comandi extra: {}</translation>
     </message>
