@@ -2,6 +2,7 @@
 Harden extra command execution
 Fix broken notification
 Fix flake8 issues
+Revert the automatic cleanup of duplicated toolbars/dock widgets (caused QGIS crashes)
 
 0.22
 Fix duplicated toolbars/dock widgets on plugin reload. Patch by Qiusheng Wu.
