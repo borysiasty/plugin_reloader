@@ -143,6 +143,14 @@ class Plugin:
 
         self.iface.addToolBarWidget(self.toolButton)
 
+        # Add QGIS version number action
+        version = qgis.core.Qgis.version().split('-')[0]
+        self.qgis_version_action = QAction(f'QGIS {version}')
+        if Settings.displayVersionNumberEnabled():
+            self.iface.addToolBarIcon(self.qgis_version_action)
+        else:
+            self.iface.removeToolBarIcon(self.qgis_version_action)
+
         self.iface.initializationCompleted.connect(self.updatePluginIcons)
 
     def unload(self):
@@ -154,6 +162,7 @@ class Plugin:
         self.iface.unregisterMainWindowAction(self.actionReloadRecentPlugin)
         self.iface.pluginMenu().removeAction(self.menu.menuAction())
         self.toolButton.deleteLater()
+        self.iface.removeToolBarIcon(self.qgis_version_action)
 
     def createActionForPlugin(self, plugin: str) -> QAction:
         """Create reloading action for a given plugin."""
@@ -258,6 +267,10 @@ class Plugin:
                     toolButtonMenu = self.toolButton.menu()
                     for menu in (toolButtonMenu, self.menu):
                         menu.removeAction(self.actionForPlugin[plugin])
+            if Settings.displayVersionNumberEnabled():
+                self.iface.addToolBarIcon(self.qgis_version_action)
+            else:
+                self.iface.removeToolBarIcon(self.qgis_version_action)
 
     def reloadDefaultPlugin(self):
         """Reloads the default plugin."""

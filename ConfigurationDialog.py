@@ -36,6 +36,7 @@ class ConfigurationDialog(QDialog, FORM_CLASS):
         self.cbNotifications.setChecked(Settings.notificationsEnabled())
         self.cbExtraCommands.setChecked(Settings.extraCommandsEnabled())
         self.pteExtraCommands.setPlainText(Settings.getExtraCommands())
+        self.cbDisplayVersionNumber.setChecked(Settings.displayVersionNumberEnabled())
         if rpc := Settings.recentPluginsCount():
             self.sbRecentPluginsCount.setValue(rpc)
 
@@ -68,4 +69,5 @@ class ConfigurationDialog(QDialog, FORM_CLASS):
         Settings.setExtraCommandsEnabled(self.cbExtraCommands.isChecked())
         Settings.setExtraCommands(self.pteExtraCommands.toPlainText())
         Settings.setRecentPluginsCount(self.sbRecentPluginsCount.value())
+        Settings.setDisplayVersionNumberEnabled(self.cbDisplayVersionNumber.isChecked())
         super().accept()
