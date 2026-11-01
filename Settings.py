@@ -113,3 +113,14 @@ class Settings():
     def setToolButtonTextEnabled(cls, state: bool):
         """Enable or disable text displayed beside the toolbar icon."""
         QSettings().setValue(f'{cls.PREFIX}/toolButtonTextEnabled', state)
+
+    @classmethod
+    def displayVersionNumberEnabled(cls) -> bool:
+        """Whether to display the version number in the toolbar."""
+        return QSettings().value(f'{cls.PREFIX}/displayVersionNumberEnabled', 
+                                 False, type=bool)
+
+    @classmethod
+    def setDisplayVersionNumberEnabled(cls, state: bool):
+        """Enable or disable version number displayed in the toolbar."""
+        QSettings().setValue(f'{cls.PREFIX}/displayVersionNumberEnabled', state)
