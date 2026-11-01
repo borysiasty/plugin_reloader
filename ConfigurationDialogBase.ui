@@ -224,7 +224,7 @@ This section is deprecated. Use the new drop-down menu in the toolbar instead.
       <string>Display a label with the current QGIS version number in the toolbar</string>
      </property>
      <property name="text">
-      <string>Display the QGIS version in number the toolbar</string>
+      <string>Display the QGIS version number in the toolbar</string>
      </property>
     </widget>
    </item>
